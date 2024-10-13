@@ -1,21 +1,35 @@
 <template>
-    <div class="main-container">
+  <div class="main-container">
     <div class="main-content">
       <div class="header">
-        <!-- <h1>Explore</h1> -->
-        <!-- <img src="../assets/poe_logo.svg" alt="Poe Logo" class="logo" /> -->
+        <!-- Header Logo -->
         <div class="header-logo">
-         <img src="../assets/poe_logo.svg" alt="Poe Logo" class="header-logo" />
-      </div>
-              
-        <div class="search-container">
-          <input type="text" placeholder="Start a new chat" class="search-input" />
-          <button class="add-button">+</button>
-          <button class="mic-button">🎤</button>
-          <button class="send-button">➡️</button>
+          <img src="../assets/poe_logo.svg" alt="Poe Logo" class="header-logo" />
         </div>
+
+        <!-- Model Selection Buttons -->
+        <div class="model-selection">
+          <button v-for="(model, index) in models" :key="model.name" class="model-button"
+            :class="{ 'selected': selectedModel === index }" @click="selectModel(index)">
+            <!-- <img :src="model.icon" :alt="model.name + ' icon'" class="model-icon" />
+            {{ model.name }} -->
+            <!-- <a-avatar :src="getImageUrl('gpt3_5.jpeg')"></a-avatar> -->
+            <!-- <img :src="'@/assets/avatars/gpt3_5.jpeg'" :alt="model.name + ' icon'" class="model-icon" /> -->
+            <!-- {{ model.name }} -->
+            <!-- "@/assets/avatars/gpt4o.jepg" -->
+            <ModelAvatar :modelName="model.name" :showName="true"></ModelAvatar>
+
+          </button>
+          <button class="model-button more-button">More</button>
+        </div>
+
+        <!-- Send Message Button -->
+        <SendMessageButton @sendMessage="sendMessage" :placeholder="'开始一个新的对话'"> </SendMessageButton>
       </div>
+
+      <!-- Bot Sections -->
       <div class="bot-sections">
+        <!-- Official Bots Section -->
         <div class="section">
           <div class="section-header">
             <h2>Official bots</h2>
@@ -31,6 +45,8 @@
             </div>
           </div>
         </div>
+
+        <!-- Bots for You Section -->
         <div class="section">
           <div class="section-header">
             <h2>Bots for you</h2>
@@ -48,126 +64,272 @@
         </div>
       </div>
     </div>
-</div>
-  </template>
-  
-  <script setup lang="ts">
-  import { ref } from 'vue';
-  
-  const officialBots = ref([
-    { name: 'Assistant', icon: '🤖', description: 'General-purpose assistant bot. For queries requiring u...' },
-    { name: 'Claude-3.5-Son...', icon: '🌟', description: 'Anthropic\'s most powerful model. Excels in complex...' },
-    { name: 'FLUX-pro-1.1', icon: '🖼️', description: 'State-of-the-art image generation with top-of-the-line...' },
-    { name: 'Playground-v3', icon: '🎮', description: 'Latest image model from Playground, with industry leadi...' },
-    { name: 'Web-Search', icon: '🌐', description: 'Web-enabled assistant bot that searches the intern...' },
-    { name: 'o1-mini', icon: '🔮', description: 'This OpenAI model is a faster, cheaper version of o1 that is...' },
-    { name: 'Ideogram-v2', icon: '🧠', description: 'Latest image model from Ideogram, with industry leading...' },
-    { name: 'GPT-4o-Mini', icon: '🤖', description: 'OpenAI\'s latest model. This intelligent small...' },
-  ]);
-  
-  const botsForYou = ref([
-    { name: 'PythonAIChat', icon: '🐍', description: 'Python programming how know everythin...' },
-    { name: 'Wolfram-math-1', icon: '🧮', description: 'Wolfram-math is and advanced math...' },
-    { name: 'einstein-chatgpt', icon: '👨‍🔬', description: 'Meet the founder of the theory of...' },
-    { name: 'Python_Expert', icon: '🐍', description: 'I am an expert in python programmin...' },
-  ]);
-  </script>
-  
-  <style scoped>
-  .main-container{
-    width: 80%;
-    height: 100vh;
-  }
-  .main-content {
-    /* max-width: 1200px; */
-    /* width:50%; */
-    height: 100vh;
+  </div>
+</template>
 
-    margin: 0 auto;
-    padding: 20px;
-    overflow-y: auto;
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import SendMessageButton from './SendMessageButton.vue';
+import { useMainStore } from '../stores/main'
+import ModelAvatar from './ModelAvatar.vue';
+import { storeToRefs } from 'pinia'
+import {
+  fetchConversation,
+  getQueryParam,
+  documentConversionUrl,
+  chat,
+  deleteAllConversation,
+  imageUploadUrl
+} from '../api/chat'
+import { useRouter } from 'vue-router';
+// import claudeImage from "@/assets/avatars/gpt3_5.jpeg";
+
+
+const router = useRouter();
+
+const store = useMainStore()
+const { api_key, client_idx, client_type, inputMessage, model } = storeToRefs(store)
+
+const clientIdx = Number(getQueryParam('client_idx')) ?? client_idx.value
+const clientType = getQueryParam('client_type') ?? client_type.value
+const apiKey = getQueryParam('api_key') || (localStorage.getItem('SJ_API_KEY') as string)
+
+
+// 使用 actions 设置状态
+store.setClientIdx(clientIdx)
+store.setApiKey(apiKey)
+store.setClientType(clientType)
+
+
+onMounted(async () => {
+  const temptApiKey = getQueryParam('api_key') || (localStorage.getItem('SJ_API_KEY') as string)
+
+  if (!temptApiKey || !client_idx.value || client_idx.value == 0) {
+
+
+    router.push('/status')
   }
-  
-  .header {
-    margin-bottom: 20px;
-  }
-  .header-logo{
-    margin: 0 auto;
-    width: 148px;
-    height: auto;
-  }
-  
-  .search-container {
-    display: flex;
-    align-items: center;
-    background-color: #f0f0f0;
-    border-radius: 20px;
-    padding: 5px;
-  }
-  
-  .search-input {
-    flex-grow: 1;
-    border: none;
-    background-color: transparent;
-    padding: 10px;
-    font-size: 16px;
-  }
-  
-  .add-button, .mic-button, .send-button {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    margin-left: 5px;
-  }
-  
-  .bot-sections {
-    display: flex;
+}
+)
+
+
+
+const officialBots = ref([
+  { name: 'Assistant', icon: '🤖', description: 'General-purpose assistant bot. For queries requiring u...' },
+  { name: 'Claude-3.5-Son...', icon: '🌟', description: 'Anthropic\'s most powerful model. Excels in complex...' },
+  { name: 'FLUX-pro-1.1', icon: '🖼️', description: 'State-of-the-art image generation with top-of-the-line...' },
+  { name: 'Playground-v3', icon: '🎮', description: 'Latest image model from Playground, with industry leadi...' },
+  { name: 'Web-Search', icon: '🌐', description: 'Web-enabled assistant bot that searches the intern...' },
+  { name: 'o1-mini', icon: '🔮', description: 'This OpenAI model is a faster, cheaper version of o1 that is...' },
+  { name: 'Ideogram-v2', icon: '🧠', description: 'Latest image model from Ideogram, with industry leading...' },
+  { name: 'GPT-4o-Mini', icon: '🤖', description: 'OpenAI\'s latest model. This intelligent small...' },
+]);
+
+const botsForYou = ref([
+  { name: 'PythonAIChat', icon: '🐍', description: 'Python programming how know everythin...' },
+  { name: 'Wolfram-math-1', icon: '🧮', description: 'Wolfram-math is and advanced math...' },
+  { name: 'einstein-chatgpt', icon: '👨‍🔬', description: 'Meet the founder of the theory of...' },
+  { name: 'Python_Expert', icon: '🐍', description: 'I am an expert in python programmin...' },
+]);
+
+const models = ref([
+  { name: 'Claude-3.5-Sonnet', icon: '../assets/claude-icon.svg' },
+  { name: 'GPT-4o', icon: "../assets/avatars/gpt4o.jepg" },
+  { name: 'GPT-3.5-turbo', icon: '../assets/gpt-turbo-icon.svg' },
+]);
+
+const sendMessage = async (messageText: string) => {
+  store.setInputMessage(messageText)
+  router.push('/chat');
+}
+const selectedModel = ref(0);  // Default to the first model
+
+const selectModel = (index: number) => {
+  selectedModel.value = index;
+  store.setModel(models.value[index].name);
+
+};
+store.setModel(models.value[selectedModel.value].name);
+
+
+</script>
+
+
+<style scoped>
+/* 全局样式 */
+.main-container {
+  width: 100%;
+  margin: 0 auto;
+  overflow-y: auto;
+}
+
+.main-content {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* 头部样式 */
+.header {
+  margin-bottom: 20px;
+  margin-top: 10rem;
+}
+
+.header-logo {
+  margin: 0 auto;
+  width: 12rem;
+  height: auto;
+}
+
+/* 模型选择按钮 */
+.model-selection {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.model-button {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.model-button:hover {
+  background-color: #e8e8e8;
+}
+
+.model-button.selected {
+  background-color: #d2d2fb;
+  color: white;
+  border-color: #d2d2fb;
+}
+
+.model-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+/* 机器人部分 */
+.bot-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.see-all {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.bot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+}
+
+.bot-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.bot-icon {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.bot-info h3 {
+  margin: 0;
+  font-size: 16px;
+  text-align: center;
+}
+
+.bot-info p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+}
+
+/* 响应式调整 */
+
+@media (max-width: 767px) {
+  .model-selection {
     flex-direction: column;
-    gap: 20px;
+    align-items: stretch;
   }
-  
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+
+  .model-button {
+    padding: 6px 12px;
+    font-size: 12px;
   }
-  
-  .see-all {
-    color: #007bff;
-    text-decoration: none;
-  }
-  
+
   .bot-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: 1fr;
   }
-  
-  .bot-item {
-    display: flex;
-    align-items: center;
-    background-color: #f9f9f9;
-    border-radius: 10px;
+
+  .header-logo {
+    width: 8rem;
+  }
+
+  .main-content {
     padding: 10px;
   }
-  
+
+  .header {
+    margin-top: 5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .model-button {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .header-logo {
+    width: 6rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .main-container {
+    width: 80%;
+  }
+
+  .bot-item {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
   .bot-icon {
-    width: 40px;
-    height: 40px;
     margin-right: 10px;
-    border-radius: 8px;
+    margin-bottom: 0;
   }
-  
-  .bot-info h3 {
-    margin: 0;
-    font-size: 16px;
-  }
-  
+
+  .bot-info h3,
   .bot-info p {
-    margin: 5px 0 0;
-    font-size: 14px;
-    color: #666;
+    text-align: left;
   }
-  </style>
+}
+</style>
