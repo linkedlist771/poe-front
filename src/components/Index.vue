@@ -110,7 +110,7 @@ onMounted(async () => {
   };
 
   const retryInterval = 2000; // 重试间隔，单位毫秒
-  const maxRetries = 5; // 最大重试次数
+  const maxRetries = 10; // 最大重试次数
   let retryCount = 0;
 
   const retryFetch = async () => {
