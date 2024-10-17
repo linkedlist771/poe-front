@@ -1,1 +1,1 @@
-export const baseUrl = process.env.BASE_URL || 'http://198.23.208.13:8000';
+export const baseUrl = process.env.BASE_URL;
