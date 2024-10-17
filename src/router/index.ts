@@ -24,7 +24,12 @@ const router = createRouter({
       path: '/status',
       name: 'status',
       component: () => import('../components/ClientsStatus.vue')
-    }
+    },
+    {
+      path: '/bots',
+      name: 'bots',
+      component: () => import('../components/AIBotsSearchComponet.vue')
+    },
   ]
 })
 

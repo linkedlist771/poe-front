@@ -12,7 +12,7 @@ export function getModelInformation(name: string){
 
 export function getAvatarForModel(name: string): string {
     const model = modelData[name.toLowerCase()]
-    console.log(model)
+    // console.log(model)
     if (!model) return getImageUrl('gpt4.jpeg')
     return getImageUrl(model.path)
 }

@@ -20,7 +20,7 @@
             <ModelAvatar :modelName="model.name" :showName="true"></ModelAvatar>
 
           </button>
-          <button class="model-button more-button">More</button>
+          <button class="model-button more-button" @click="openModal">更多模型</button>
         </div>
 
         <!-- Send Message Button -->
@@ -33,24 +33,28 @@
         <div class="section">
           <div class="section-header">
             <h2>Official bots</h2>
-            <a href="#" class="see-all">See all</a>
+            <a href="#" class="see-all" @click="openModal">See all</a>
           </div>
           <div class="bot-grid">
-            <div v-for="bot in officialBots" :key="bot.name" class="bot-item">
-              <img :src="bot.icon" :alt="bot.name" class="bot-icon" />
+            <div v-for="bot in officialBots" :key="bot.name" class="bot-item" @click="chatWithBot(bot.name)">
+              <!-- <img :src="bot.icon" :alt="bot.name" class="bot-icon" /> -->
+              <ModelAvatar :modelName="bot.name" :showName="false"></ModelAvatar>
+
               <div class="bot-info">
                 <h3>{{ bot.name }}</h3>
-                <p>{{ bot.description }}</p>
+                <p>{{ getModelInformation(bot.name).desc.substring(0, 30) + "..." }}</p>
               </div>
+              <!-- <ModelItem v-for="bot in officialBots" :key="bot.name" :modelName="bot.name"
+                :modelInfo="getModelInformation(bot.name)" @click="chatWithBot"></ModelItem> -->
             </div>
           </div>
         </div>
 
         <!-- Bots for You Section -->
-        <div class="section">
+        <!-- <div class="section">
           <div class="section-header">
             <h2>Bots for you</h2>
-            <a href="#" class="see-all">See all</a>
+            <a href="#" class="see-all" @click="openModal">See all</a>
           </div>
           <div class="bot-grid">
             <div v-for="bot in botsForYou" :key="bot.name" class="bot-item">
@@ -61,14 +65,17 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
+  <AIBotsSearchComponet :isVisible="showModal" @close="closeModal" />
+
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { getModelInformation } from '../api/model_utils'
 import SendMessageButton from './SendMessageButton.vue';
 import { useMainStore } from '../stores/main'
 import ModelAvatar from './ModelAvatar.vue';
@@ -81,8 +88,19 @@ import {
   deleteAllConversation,
   imageUploadUrl
 } from '../api/chat'
-import { useRouter } from 'vue-router';
+import AIBotsSearchComponet from './AIBotsSearchComponet.vue';
+
+import { useRouter, useRoute } from 'vue-router';
 // import claudeImage from "@/assets/avatars/gpt3_5.jpeg";
+const showModal = ref(false);
+
+const openModal = () => {
+  showModal.value = true;
+};
+
+const closeModal = () => {
+  showModal.value = false;
+};
 
 
 const router = useRouter();
@@ -112,17 +130,35 @@ onMounted(async () => {
 }
 )
 
+const route = useRoute();
+
+const chatWithBot = async (modelName: string) => {
+  store.setModel(modelName);
+  store.clearCurrentChatHistory();
+  const query = {}
+  // 判断当前是否在 /chat 路由
+  if (route.path === '/chat') {
+    await router.replace({ path: '/chat', query })
+    window.location.reload()
+  } else {
+    await router.push({ path: '/chat', query })
+  }
+
+  closeModal();
+};
+
 
 
 const officialBots = ref([
   { name: 'Assistant', icon: '🤖', description: 'General-purpose assistant bot. For queries requiring u...' },
-  { name: 'Claude-3.5-Son...', icon: '🌟', description: 'Anthropic\'s most powerful model. Excels in complex...' },
-  { name: 'FLUX-pro-1.1', icon: '🖼️', description: 'State-of-the-art image generation with top-of-the-line...' },
+  { name: 'Claude-3.5-Sonnet', icon: '🌟', description: 'Anthropic\'s most powerful model. Excels in complex...' },
+  { name: 'FLUX-pro', icon: '🖼️', description: 'State-of-the-art image generation with top-of-the-line...' },
   { name: 'Playground-v3', icon: '🎮', description: 'Latest image model from Playground, with industry leadi...' },
   { name: 'Web-Search', icon: '🌐', description: 'Web-enabled assistant bot that searches the intern...' },
   { name: 'o1-mini', icon: '🔮', description: 'This OpenAI model is a faster, cheaper version of o1 that is...' },
   { name: 'Ideogram-v2', icon: '🧠', description: 'Latest image model from Ideogram, with industry leading...' },
   { name: 'GPT-4o-Mini', icon: '🤖', description: 'OpenAI\'s latest model. This intelligent small...' },
+  { name: "sdxl-lightning" }
 ]);
 
 const botsForYou = ref([
@@ -143,13 +179,14 @@ const sendMessage = async (messageText: string) => {
   router.push('/chat');
 }
 const selectedModel = ref(0);  // Default to the first model
+store.setModel(models.value[0].name);
 
 const selectModel = (index: number) => {
   selectedModel.value = index;
   store.setModel(models.value[index].name);
 
 };
-store.setModel(models.value[selectedModel.value].name);
+// store.setModel(models.value[selectedModel.value].name);
 
 
 </script>
@@ -199,6 +236,9 @@ store.setModel(models.value[selectedModel.value].name);
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s, border-color 0.3s;
+  margin-bottom: 10px;
+  /* Add some space between buttons */
+
 }
 
 .model-button:hover {
@@ -251,6 +291,12 @@ store.setModel(models.value[selectedModel.value].name);
   padding: 10px;
 }
 
+.bot-item:hover {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+
 .bot-icon {
   width: 60px;
   height: 60px;
@@ -280,9 +326,14 @@ store.setModel(models.value[selectedModel.value].name);
   }
 
   .model-button {
-    padding: 6px 12px;
-    font-size: 12px;
+    padding: 10px 16px;
+    /* Increase padding for better touch targets */
+    font-size: 14px;
+    /* Slightly larger font size */
+    margin-bottom: 10px;
+    /* Add space between buttons */
   }
+
 
   .bot-grid {
     grid-template-columns: 1fr;
@@ -299,17 +350,35 @@ store.setModel(models.value[selectedModel.value].name);
   .header {
     margin-top: 5rem;
   }
+
+  .more-button {
+    margin-top: 10px;
+    /* Add extra space above the "More Models" button */
+    /* background-color: #e8e8e8; */
+    /* Slightly darker background to stand out */
+    font-weight: bold;
+    /* Make the text bold */
+  }
+
 }
 
 @media (max-width: 480px) {
   .model-button {
-    padding: 4px 8px;
-    font-size: 11px;
+    padding: 8px 14px;
+    /* Slightly reduce padding for very small screens */
+    font-size: 13px;
+    /* Slightly smaller font size */
   }
 
   .header-logo {
     width: 6rem;
   }
+
+  .more-button {
+    padding: 10px 16px;
+    /* Keep the "More Models" button slightly larger */
+  }
+
 }
 
 @media (min-width: 768px) {

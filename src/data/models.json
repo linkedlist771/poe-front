@@ -1,4 +1,43 @@
 {
+    "assistant": {
+        "baseModel": "capybara",
+        "tokens": 2000,
+        "endpoints": [
+            "/v1/chat/completions"
+        ],
+        "premium_model": false,
+        "object": "model",
+        "owned_by": "poe",
+        "path": "assistant.svg",
+        "desc": "通用助手机器人。对于需要最新信息的查询，它可以从网络访问实时数据以提供更准确的答案。",
+        "points": 20
+    },
+    "web-search": {
+        "baseModel": "websearch",
+        "tokens": 2000,
+        "endpoints": [
+            "/v1/chat/completions"
+        ],
+        "premium_model": false,
+        "object": "model",
+        "owned_by": "poe",
+        "path": "websearch.jpeg",
+        "desc": "支持网络的助手机器人，通过搜索互联网来丰富其回答。特别擅长处理关于最新信息或具体事实的查询。由 GPT 4o Mini 驱动。",
+        "points": 15
+    },
+    "o1-mini": {
+        "baseModel": "gpt_o1_mini_128k",
+        "tokens": 2000,
+        "endpoints": [
+            "/v1/chat/completions"
+        ],
+        "premium_model": false,
+        "object": "model",
+        "owned_by": "openai",
+        "path": "o1.jpeg",
+        "desc": "这个OpenAI模型是o1的更快、更便宜的版本，特别擅长编码、数学和科学应用，适用于不需要广泛通用知识的场景。它支持128k tokens的上下文。",
+        "points": 1800
+    },
     "gpt-3.5-turbo": {
         "baseModel": "gpt3_5",
         "tokens": 2000,
@@ -9,7 +48,7 @@
         "object": "model",
         "owned_by": "openai",
         "path": "gpt3_5.jpeg",
-        "desc": "由GPT-3.5 Turbo驱动。",
+        "desc": "由 GPT-3.5 Turbo 驱动。",
         "points": 20
     },
     "gpt-3.5-turbo-instruct": {
@@ -20,7 +59,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "openai"
+        "path": "gpt3_5.jpeg",
+        "desc": "由 GPT-3.5 Turbo Instruct 驱动。",
+        "owned_by": "openai",
+        "points": 20
     },
     "gpt-3.5-turbo-16k": {
         "baseModel": "agouti",
@@ -30,7 +72,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "openai"
+        "path": "gpt3_5.jpeg",
+        "desc": "由 GPT-3.5 Turbo Instruct-16K 驱动。",
+        "owned_by": "openai",
+        "points": 55
     },
     "gpt-4": {
         "baseModel": "gpt4_classic",
@@ -40,7 +85,10 @@
         ],
         "premium_model": true,
         "object": "model",
-        "owned_by": "openai"
+        "desc": "OpenAI 的 GPT-4 模型。文本输入由 gpt-4-0613（非 Turbo）驱动，图像输入由 gpt-4o 提供支持。",
+        "path": "gpt4.jpeg",
+        "owned_by": "openai",
+        "points": 2250
     },
     "gpt-4-turbo": {
         "baseModel": "beaver",
@@ -50,7 +98,10 @@
         ],
         "premium_model": true,
         "object": "model",
-        "owned_by": "openai"
+        "path": "gpt4.jpeg",
+        "owned_by": "openai",
+        "desc": "由 GPT-4 Turbo 提供支持，具有更高的性能和更大的上下文窗口（4000 个 tokens）。",
+        "points": 2500
     },
     "gpt-4-turbo-128k": {
         "baseModel": "vizcacha",
@@ -60,7 +111,10 @@
         ],
         "premium_model": true,
         "object": "model",
-        "owned_by": "openai"
+        "path": "gpt4.jpeg",
+        "owned_by": "openai",
+        "desc": "由 GPT-4 Turbo 提供支持，具有超大上下文窗口（128,000 个 tokens），适用于处理超长文本。",
+        "points": 14000
     },
     "gpt-4o": {
         "baseModel": "gpt4_o",
@@ -83,7 +137,10 @@
         ],
         "premium_model": true,
         "object": "model",
-        "owned_by": "openai"
+        "path": "gpt4o.jpeg",
+        "owned_by": "openai",
+        "desc": "OpenAI 最强大的模型之一，具有超大上下文窗口（128,000 个 tokens）。适用于复杂任务和超长文本处理。",
+        "points": 1800
     },
     "gpt-4o-mini": {
         "baseModel": "gpt4_o_mini",
@@ -93,7 +150,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "openai"
+        "path": "gpt4o.jpeg",
+        "owned_by": "openai",
+        "desc": "由 GPT-4o Mini 提供支持，优化速度和成本的同时，仍然具备强大的功能，适用于一般用途。",
+        "points": 150
     },
     "gpt-4o-mini-128k": {
         "baseModel": "gpt4_o_mini_128k",
@@ -103,7 +163,10 @@
         ],
         "premium_model": true,
         "object": "model",
-        "owned_by": "openai"
+        "path": "gpt4o.jpeg",
+        "owned_by": "openai",
+        "desc": "由 GPT-4o Mini 提供支持，具有超大上下文窗口（128,000 个 tokens），在保持性能的同时优化了速度和成本。",
+        "points": 850
     },
     "claude-instant": {
         "baseModel": "a2",
@@ -112,8 +175,11 @@
             "/v1/chat/completions"
         ],
         "premium_model": false,
+        "path": "claude2.png",
         "object": "model",
-        "owned_by": "anthropic"
+        "owned_by": "anthropic",
+        "desc": "由 Claude Instant 提供支持，擅长快速响应和一般任务，具有 9,000 个 tokens 的上下文窗口。",
+        "points": 100
     },
     "claude-instant-100k": {
         "baseModel": "a2_100k",
@@ -123,7 +189,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "anthropic"
+        "path": "claude2.png",
+        "owned_by": "anthropic",
+        "desc": "由 Claude Instant 提供支持，具有 100,000 个 tokens 的超大上下文窗口，适用于处理长文本和复杂任务。",
+        "points": 500
     },
     "claude-2": {
         "baseModel": "claude_2_short",
@@ -133,7 +202,10 @@
         ],
         "premium_model": true,
         "object": "model",
-        "owned_by": "anthropic"
+        "path": "claude2.png",
+        "owned_by": "anthropic",
+        "desc": "Anthropic 的高级模型 Claude 2，擅长复杂任务如编码、写作和分析，具有 4,000 个 tokens 的上下文窗口。",
+        "points": 500
     },
     "claude-2-100k": {
         "baseModel": "a2_2",
@@ -143,7 +215,10 @@
         ],
         "premium_model": true,
         "object": "model",
-        "owned_by": "anthropic"
+        "path": "claude2.png",
+        "owned_by": "anthropic",
+        "desc": "Anthropic 的高级模型 Claude 2，具有 100,000 个 tokens 的超大上下文窗口，适用于处理超长文本和复杂任务。",
+        "points": 2500
     },
     "claude-3-opus": {
         "baseModel": "claude_2_1_cedar",
@@ -153,7 +228,10 @@
         ],
         "premium_model": true,
         "object": "model",
-        "owned_by": "anthropic"
+        "path": "claude.jpeg",
+        "owned_by": "anthropic",
+        "desc": "由 Claude 3 Opus 提供支持，擅长复杂任务，具有 4,000 个 tokens 的上下文窗口。",
+        "points": 550
     },
     "claude-3-sonnet": {
         "baseModel": "claude_2_1_bamboo",
@@ -163,7 +241,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "anthropic"
+        "path": "claude.jpeg",
+        "owned_by": "anthropic",
+        "desc": "由 Claude 3 Sonnet 提供支持，擅长一般任务，具有 4,000 个 tokens 的上下文窗口。",
+        "points": 380
     },
     "claude-3-haiku": {
         "baseModel": "claude_3_haiku",
@@ -173,7 +254,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "anthropic"
+        "path": "claude.jpeg",
+        "owned_by": "anthropic",
+        "desc": "由 Claude 3 Haiku 提供支持，优化速度和成本，适用于一般用途，具有 4,000 个 tokens 的上下文窗口。",
+        "points": 200
     },
     "claude-3-opus-200k": {
         "baseModel": "claude_3_opus_200k",
@@ -183,7 +267,10 @@
         ],
         "premium_model": true,
         "object": "model",
-        "owned_by": "anthropic"
+        "path": "claude.jpeg",
+        "owned_by": "anthropic",
+        "desc": "由 Claude 3 Opus 提供支持，具有 200,000 个 tokens 的超大上下文窗口，适用于处理超长文本和复杂任务。",
+        "points": 3000
     },
     "claude-3-sonnet-200k": {
         "baseModel": "claude_3_sonnet_200k",
@@ -193,7 +280,10 @@
         ],
         "premium_model": true,
         "object": "model",
-        "owned_by": "anthropic"
+        "path": "claude.jpeg",
+        "owned_by": "anthropic",
+        "desc": "由 Claude 3 Sonnet 提供支持，具有 200,000 个 tokens 的超大上下文窗口，适用于处理超长文本和复杂任务。",
+        "points": 2800
     },
     "claude-3-haiku-200k": {
         "baseModel": "claude_3_haiku_200k",
@@ -203,7 +293,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "anthropic"
+        "owned_by": "anthropic",
+        "path": "claude.jpeg",
+        "desc": "由 Claude 3 Haiku 提供支持，具有 200,000 个 tokens 的超大上下文窗口，优化速度和成本，适用于处理超长文本。",
+        "points": 1800
     },
     "claude-3.5-sonnet": {
         "baseModel": "claude-3.5-sonnet",
@@ -219,7 +312,7 @@
         "points": 380
     },
     "claude-3.5-sonnet-200k": {
-        "baseModel": "claude_3_igloo_200k",
+        "baseModel": "claude-3.5-sonnet-200k",
         "tokens": 200000,
         "endpoints": [
             "/v1/chat/completions"
@@ -228,7 +321,7 @@
         "object": "model",
         "owned_by": "anthropic",
         "path": "claude.jpeg",
-        "desc": "Anthropic公司最强大的模型。擅长复杂任务,如自主编码和视觉处理。此外,在处理长文档时表现出色,能够确保搜索和检索等任务的准确性,并能比较多个长篇文档。支持200k个标记的上下文。计算点数值可能会发生变化。",
+        "desc": "Anthropic公司最强大的模型。擅长复杂任务，如自主编码和视觉处理。此外，在处理长文档时表现出色，能够确保搜索和检索等任务的准确性，并能比较多个长篇文档。支持 200,000 个 tokens 的上下文。积分可能会发生变化。",
         "points": 1800
     },
     "gemini-1.5-pro": {
@@ -239,7 +332,10 @@
         ],
         "premium_model": true,
         "object": "model",
-        "owned_by": "google"
+        "path": "gemini.jpeg",
+        "owned_by": "google",
+        "desc": "由 Gemini 1.5 Pro 提供支持，擅长复杂任务，如编码、写作和分析，具有 4,000 个 tokens 的上下文窗口。",
+        "points": 600
     },
     "gemini-1.5-pro-128k": {
         "baseModel": "gemini_1_5_pro_128k",
@@ -249,7 +345,10 @@
         ],
         "premium_model": true,
         "object": "model",
-        "owned_by": "google"
+        "path": "gemini.jpeg",
+        "owned_by": "google",
+        "desc": "由 Gemini 1.5 Pro 提供支持，具有 128,000 个 tokens 的超大上下文窗口，适用于处理超长文本和复杂任务。",
+        "points": 3000
     },
     "gemini-1.5-pro-2m": {
         "baseModel": "gemini_1_5_pro_1m",
@@ -259,7 +358,10 @@
         ],
         "premium_model": true,
         "object": "model",
-        "owned_by": "google"
+        "path": "gemini.jpeg",
+        "owned_by": "google",
+        "desc": "由 Gemini 1.5 Pro 提供支持，具有 2,000,000 个 tokens 的超大上下文窗口，适用于处理超长文本和海量数据任务。",
+        "points": 50000
     },
     "gemini-1.5-flash": {
         "baseModel": "gemini_1_5_flash",
@@ -269,7 +371,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "google"
+        "path": "gemini.jpeg",
+        "owned_by": "google",
+        "desc": "由 Gemini 1.5 Flash 提供支持，优化速度和成本，适用于一般用途，具有 4,000 个 tokens 的上下文窗口。",
+        "points": 150
     },
     "gemini-1.5-flash-128k": {
         "baseModel": "gemini_1_5_flash_128k",
@@ -279,7 +384,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "google"
+        "path": "gemini.jpeg",
+        "owned_by": "google",
+        "desc": "由 Gemini 1.5 Flash 提供支持，具有 128,000 个 tokens 的超大上下文窗口，适用于处理长文本和复杂任务。",
+        "points": 2000
     },
     "gemini-1.5-flash-1m": {
         "baseModel": "gemini_1_5_flash_1m",
@@ -289,7 +397,10 @@
         ],
         "premium_model": true,
         "object": "model",
-        "owned_by": "google"
+        "path": "gemini.jpeg",
+        "owned_by": "google",
+        "desc": "由 Gemini 1.5 Flash 提供支持，具有 1,000,000 个 tokens 的超大上下文窗口，适用于处理超长文本和大型数据集。",
+        "points": 25000
     },
     "gemini-1.5-flash-search": {
         "baseModel": "gemini_pro_search",
@@ -299,7 +410,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "google"
+        "path": "gemini.jpeg",
+        "owned_by": "google",
+        "desc": "由 Gemini 1.5 Flash Search 提供支持，优化搜索和检索任务，具有 4,000 个 tokens 的上下文窗口。",
+        "points": 180
     },
     "gemini-1.5-pro-search": {
         "baseModel": "gemini_1_5_pro_search",
@@ -309,7 +423,10 @@
         ],
         "premium_model": true,
         "object": "model",
-        "owned_by": "google"
+        "path": "gemini.jpeg",
+        "owned_by": "google",
+        "desc": "由 Gemini 1.5 Pro Search 提供支持，专为高级搜索和数据分析任务设计，具有 4,000 个 tokens 的上下文窗口。",
+        "points": 700
     },
     "code-llama-13b": {
         "baseModel": "code_llama_13b_instruct",
@@ -319,7 +436,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "meta"
+        "path": "llama.jpeg",
+        "owned_by": "meta",
+        "desc": "由 Code Llama 13B 提供支持，擅长代码生成和理解，适用于编程和技术任务，具有 4,000 个 tokens 的上下文窗口。",
+        "points": 200
     },
     "code-llama-34b": {
         "baseModel": "code_llama_34b_instruct",
@@ -329,7 +449,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "meta"
+        "path": "llama.jpeg",
+        "owned_by": "meta",
+        "desc": "由 Code Llama 34B 提供支持，具备更强的代码生成和理解能力，适用于高级编程任务，具有 4,000 个 tokens 的上下文窗口。",
+        "points": 350
     },
     "llama-3-8b": {
         "baseModel": "groq_llama_3_8b",
@@ -339,7 +462,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "meta"
+        "path": "llama.jpeg",
+        "owned_by": "meta",
+        "desc": "由 Llama 3 8B 提供支持，适用于通用任务，具有 8,000 个 tokens 的上下文窗口。",
+        "points": 150
     },
     "llama-3-70b": {
         "baseModel": "groq_llama_3_70b",
@@ -349,7 +475,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "meta"
+        "path": "llama.jpeg",
+        "owned_by": "meta",
+        "desc": "由 Llama 3 70B 提供支持，具备更高性能，适用于复杂任务，具有 8,000 个 tokens 的上下文窗口。",
+        "points": 400
     },
     "llama-3-70b-instruct": {
         "baseModel": "llama370bt",
@@ -359,7 +488,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "meta"
+        "path": "llama.jpeg",
+        "owned_by": "meta",
+        "desc": "由 Llama 3 70B Instruct 提供支持，优化了指令遵循能力，适用于需要精确指导的任务，具有 8,000 个 tokens 的上下文窗口。",
+        "points": 450
     },
     "llama-3.1-8b-128k": {
         "baseModel": "llama318bfw128k",
@@ -369,7 +501,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "meta"
+        "path": "llama.jpeg",
+        "owned_by": "meta",
+        "desc": "由 Llama 3.1 8B 提供支持，具有 128,000 个 tokens 的超大上下文窗口，适用于长文本处理和复杂任务。",
+        "points": 800
     },
     "llama-3.1-70b-128k": {
         "baseModel": "llama3170bfw128k",
@@ -379,7 +514,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "meta"
+        "path": "llama.jpeg",
+        "owned_by": "meta",
+        "desc": "由 Llama 3.1 70B 提供支持，具有 128,000 个 tokens 的超大上下文窗口，适用于处理超长文本和复杂任务，性能更强。",
+        "points": 1500
     },
     "llama-3.1-405b-instruct": {
         "baseModel": "llama31405bt",
@@ -389,7 +527,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "meta"
+        "path": "llama.jpeg",
+        "owned_by": "meta",
+        "desc": "由 Llama 3.1 405B Instruct 提供支持，是高参数量模型，具备卓越的性能，适用于最复杂的任务，具有 4,000 个 tokens 的上下文窗口。",
+        "points": 3000
     },
     "llama-3.1-405b-128k": {
         "baseModel": "llama31405bfw128k",
@@ -399,7 +540,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "meta"
+        "path": "llama.jpeg",
+        "owned_by": "meta",
+        "desc": "由 Llama 3.1 405B 提供支持，具有 128,000 个 tokens 的超大上下文窗口，适用于超长文本和最复杂的任务。",
+        "points": 5000
     },
     "mistral-7b": {
         "baseModel": "groq_mixtral_8x_7b",
@@ -409,7 +553,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "mistralai"
+        "path": "mistral.jpeg",
+        "owned_by": "mistralai",
+        "desc": "由 Mistral 7B 提供支持，轻量级模型，适用于一般任务，具有 4,000 个 tokens 的上下文窗口。",
+        "points": 100
     },
     "mistral-medium": {
         "baseModel": "mistral_medium",
@@ -419,7 +566,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "mistralai"
+        "path": "mistral.jpeg",
+        "owned_by": "mistralai",
+        "desc": "由 Mistral Medium 提供支持，具有 32,000 个 tokens 的上下文窗口，适用于处理较长文本和复杂任务。",
+        "points": 800
     },
     "mistral-large": {
         "baseModel": "mistral_large",
@@ -429,7 +579,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "mistralai"
+        "path": "mistral.jpeg",
+        "owned_by": "mistralai",
+        "desc": "由 Mistral Large 提供支持，性能更强，具有 32,000 个 tokens 的上下文窗口，适用于复杂任务和长文本处理。",
+        "points": 1200
     },
     "palm-2": {
         "baseModel": "acouchy",
@@ -439,7 +592,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "google"
+        "path": "gemini.jpeg",
+        "owned_by": "google",
+        "desc": "由 PaLM 2 提供支持，适用于通用任务，具有 8,000 个 tokens 的上下文窗口。",
+        "points": 300
     },
     "mytho-max-l2-13b": {
         "baseModel": "mythomaxl213b",
@@ -449,7 +605,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "gryphe"
+        "owned_by": "gryphe",
+        "path": "mytho.jpeg",
+        "desc": "由 Mythomax L2 13B 提供支持，适用于一般任务，具有 4,000 个 tokens 的上下文窗口。",
+        "points": 250
     },
     "solar-mini": {
         "baseModel": "upstage_solar_0_70b_16bit",
@@ -459,7 +618,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "upstage"
+        "owned_by": "upstage",
+        "path": "solar.jpeg",
+        "desc": "由 Solar Mini 提供支持，轻量级模型，适用于一般任务，具有 2,000 个 tokens 的上下文窗口。",
+        "points": 100
     },
     "gemma-7b": {
         "baseModel": "gemma7bfw",
@@ -469,7 +631,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "google"
+        "path": "gemini.jpeg",
+        "owned_by": "google",
+        "desc": "由 Gemma 7B 提供支持，适用于一般任务，具有 4,000 个 tokens 的上下文窗口。",
+        "points": 200
     },
     "gemma-instruct-7b": {
         "baseModel": "gemmainstruct7bt",
@@ -479,7 +644,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "google"
+        "path": "gemini.jpeg",
+        "owned_by": "google",
+        "desc": "由 Gemma Instruct 7B 提供支持，优化了指令遵循能力，适用于需要精确指导的任务，具有 4,000 个 tokens 的上下文窗口。",
+        "points": 220
     },
     "qwen-1.5-72b": {
         "baseModel": "qwen72bt",
@@ -489,7 +657,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "alibaba"
+        "path": "qwen.jpeg",
+        "owned_by": "alibaba",
+        "desc": "由 通义千问 1.5 72B 提供支持，适用于一般任务，具有 4,000 个 tokens 的上下文窗口。",
+        "points": 300
     },
     "qwen-1.5-110b": {
         "baseModel": "qwen15110bt",
@@ -499,7 +670,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "alibaba"
+        "path": "qwen.jpeg",
+        "owned_by": "alibaba",
+        "desc": "由 通义千问 1.5 110B 提供支持，具备更强性能，适用于复杂任务，具有 4,000 个 tokens 的上下文窗口。",
+        "points": 400
     },
     "qwen-2-72b": {
         "baseModel": "qwen272bchat",
@@ -509,7 +683,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "alibaba"
+        "path": "qwen.jpeg",
+        "owned_by": "alibaba",
+        "desc": "由 通义千问 2 72B 提供支持，适用于一般任务，具有 4,000 个 tokens 的上下文窗口。",
+        "points": 350
     },
     "qwen-2-72b-instruct": {
         "baseModel": "qwen272binstructt",
@@ -519,7 +696,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "alibaba"
+        "path": "qwen.jpeg",
+        "owned_by": "alibaba",
+        "desc": "由 通义千问 2 72B Instruct 提供支持，优化了指令遵循能力，适用于需要精确指导的任务，具有 4,000 个 tokens 的上下文窗口。",
+        "points": 370
     },
     "snowflake-arctic-instruct": {
         "baseModel": "snowflakearctict",
@@ -529,7 +709,10 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "snowflake"
+        "owned_by": "snowflake",
+        "path": "snowflake.jpeg",
+        "desc": "由 Snowflake Arctic Instruct 提供支持，优化了指令遵循能力，适用于需要精确指导的任务，具有 2,000 个 tokens 的上下文窗口。",
+        "points": 180
     },
     "playground-v2.5": {
         "baseModel": "playgroundv25",
@@ -541,6 +724,7 @@
         "premium_model": false,
         "object": "model",
         "owned_by": "playgroundai",
+        "path": "playgroundv25.jpeg",
         "sizes": {
             "1024x1024": "--aspect 1:1",
             "1254x836": "--aspect 3:2",
@@ -555,7 +739,40 @@
             "768x1365": "--aspect 9:16",
             "1295x809": "--aspect 16:10",
             "809x1295": "--aspect 10:16"
-        }
+        },
+        "text2image": true,
+        "desc": "由 Playground v2.5 提供支持，适用于图像生成和编辑，提供多种尺寸选项。",
+        "points": 80
+    },
+    "playground-v3": {
+        "baseModel": "playgroundv25",
+        "tokens": 80,
+        "endpoints": [
+            "/v1/images/generations",
+            "/v1/images/edits"
+        ],
+        "premium_model": false,
+        "object": "model",
+        "owned_by": "playgroundv3",
+        "path": "playgroundv25.jpeg",
+        "sizes": {
+            "1024x1024": "--aspect 1:1",
+            "1254x836": "--aspect 3:2",
+            "836x1254": "--aspect 2:3",
+            "1182x886": "--aspect 4:3",
+            "886x1182": "--aspect 3:4",
+            "1161x903": "--aspect 9:7",
+            "903x1161": "--aspect 7:9",
+            "1536x640": "--aspect 12:5",
+            "640x1536": "--aspect 5:12",
+            "1365x768": "--aspect 16:9",
+            "768x1365": "--aspect 9:16",
+            "1295x809": "--aspect 16:10",
+            "809x1295": "--aspect 10:16"
+        },
+        "text2image": true,
+        "desc": "由 Playground v3 提供支持，适用于图像生成和编辑，提供多种尺寸选项。",
+        "points": 40
     },
     "sdxl": {
         "baseModel": "stablediffusionxl",
@@ -566,6 +783,7 @@
         ],
         "premium_model": false,
         "object": "model",
+        "path": "sd.jpeg",
         "owned_by": "stabilityai",
         "sizes": {
             "1024x1024": "--aspect 1:1",
@@ -577,7 +795,10 @@
             "832x1216": "--aspect 13:19",
             "1536x640": "--aspect 12:5",
             "640x1536": "--aspect 5:12"
-        }
+        },
+        "text2image": true,
+        "desc": "由 Stable Diffusion XL 提供支持，适用于高质量图像生成和编辑，提供多种尺寸选项。",
+        "points": 80
     },
     "sdxl-lightning": {
         "baseModel": "falsdxllightning",
@@ -587,7 +808,11 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "bytedance"
+        "owned_by": "bytedance",
+        "path": "sd.jpeg",
+        "desc": "由字节跳动提供的SDXL Lightning 提供支持，优化速度和成本，适用于快速图像生成。",
+        "text2image": true,
+        "points": 80
     },
     "stable-diffusion-3": {
         "baseModel": "stablediffusion3",
@@ -598,7 +823,11 @@
         ],
         "premium_model": true,
         "object": "model",
-        "owned_by": "stabilityai"
+        "path": "sd.jpeg",
+        "owned_by": "stabilityai",
+        "desc": "由 Stable Diffusion 3 提供支持，最新版本的稳定扩散模型，适用于高质量图像生成和编辑。",
+        "text2image": true,
+        "points": 150
     },
     "stable-diffusion-3-turbo": {
         "baseModel": "sd3turbo",
@@ -609,7 +838,11 @@
         ],
         "premium_model": true,
         "object": "model",
-        "owned_by": "stabilityai"
+        "path": "sd.jpeg",
+        "owned_by": "stabilityai",
+        "desc": "由 Stable Diffusion 3 Turbo 提供支持，优化性能，适用于高质量图像生成和编辑。",
+        "text2image": true,
+        "points": 180
     },
     "stable-diffusion-3-2b": {
         "baseModel": "stablediffusion32b",
@@ -620,7 +853,11 @@
         ],
         "premium_model": false,
         "object": "model",
-        "owned_by": "stabilityai"
+        "path": "sd.jpeg",
+        "owned_by": "stabilityai",
+        "desc": "由 Stable Diffusion 3 2B 提供支持，适用于一般图像生成和编辑。",
+        "text2image": true,
+        "points": 80
     },
     "dall-e-3": {
         "baseModel": "dalle3",
@@ -636,7 +873,31 @@
             "1024x1024": "--aspect 1:1",
             "1792x1024": "--aspect 7:4",
             "1024x1792": "--aspect 4:7"
-        }
+        },
+        "path": "dalle3.jpeg",
+        "text2image": true,
+        "desc": "由 DALL·E 3 提供支持，OpenAI 的最新图像生成模型，能够生成高质量和复杂的图像，提供多种尺寸选项。",
+        "points": 200
+    },
+    "flux-pro": {
+        "baseModel": "fluxpro",
+        "tokens": 80,
+        "endpoints": [
+            "/v1/images/generations",
+            "/v1/images/edits"
+        ],
+        "premium_model": true,
+        "object": "model",
+        "owned_by": "openai",
+        "sizes": {
+            "1024x1024": "--aspect 1:1",
+            "1792x1024": "--aspect 7:4",
+            "1024x1792": "--aspect 4:7"
+        },
+        "path": "flux.jpeg",
+        "text2image": true,
+        "desc": "最先进的图像生成，具备顶级的提示跟随、视觉质量、图像细节和输出多样性。这是最强大的 FLUX.1 版本。使用“–aspect”来选择宽高比（例如 –aspect 1:1）。",
+        "points": 1250
     },
     "ideogram": {
         "baseModel": "ideogram",
@@ -658,6 +919,36 @@
             "768x1365": "--aspect 9:16",
             "1295x809": "--aspect 16:10",
             "809x1295": "--aspect 10:16"
-        }
+        },
+        "text2image": true,
+        "path": "ideogram.jpeg",
+        "desc": "由 Ideogram 提供支持，专注于生成文字和符号图像，适用于创意设计，提供多种尺寸选项。",
+        "points": 18000
+    },
+    "ideogram-v2": {
+        "baseModel": "ideogram",
+        "tokens": 80,
+        "endpoints": [
+            "/v1/images/generations",
+            "/v1/images/edits"
+        ],
+        "premium_model": true,
+        "object": "model",
+        "owned_by": "ideogram",
+        "sizes": {
+            "1024x1024": "--aspect 1:1",
+            "1254x836": "--aspect 3:2",
+            "836x1254": "--aspect 2:3",
+            "1182x886": "--aspect 4:3",
+            "886x1182": "--aspect 3:4",
+            "1365x768": "--aspect 16:9",
+            "768x1365": "--aspect 9:16",
+            "1295x809": "--aspect 16:10",
+            "809x1295": "--aspect 10:16"
+        },
+        "text2image": true,
+        "path": "ideogram.jpeg",
+        "desc": "由 Ideogram 提供支持，专注于生成文字和符号图像，适用于创意设计，提供多种尺寸选项。",
+        "points": 1900
     }
 }

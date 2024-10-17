@@ -20,12 +20,15 @@
           :class="{ 'dark': isDarkTheme, 'card-plus': item.type === 'plus', 'card-normal': item.type === 'normal', 'card-cd': item.status === 'cd' }"
           @click="handleCardClick(item)">
           <template #extra>
-            <a-tag :color="getTagColor(item)" v-if="item.is_session_login">官网1:1</a-tag>
+            <!-- <a-tag :color="getTagColor(item)" v-if="item.is_session_login">官网1:1</a-tag> -->
             <a-tag :color="item.type === 'normal' ? '#2db7f5' : '#f50'">
               {{ item.type }}
             </a-tag>
           </template>
-          <a-statistic :title="item.id" :value="item.usage" :value-style="{ color: '#3f8600' }" />
+          {{ item.id }}
+          <!-- <a-statistic :title="item.id" :value="item.usage" :value-style="{ color: '#3f8600' }" /> -->
+          <a-statistic :title="'该账号剩余可用积分'" :value="item.usage" :value-style="{ color: '#3f8600' }" />
+
           <a-statistic :title="'状态'" :value="item.status === 'cd' ? '冷却' : '可用'"
             :value-style="{ color: item.status === 'cd' ? '#cf1322' : '#3f8600' }" />
         </a-card>
@@ -60,7 +63,7 @@ interface DataItem {
 }
 
 const isDarkTheme = ref(false);
-const notice = ref('选择状态为可用的账号使用，当下方使用账号次数达到上限时，这时候你需要点击换号，选择一个可用的账号使用。要想长期保留记录，请在此账号下续费，不然记录会丢失。如出现报错或无回复，请尝试刷新页面或退出账号重新登录，开始新对话即可使用。');
+const notice = ref('POE账号不存在时间限制， 只有积分限制，在该账号积分使用完毕之前均可使用， 请注意您的积分消耗速度， 我们会定期重置您的可用积分。 下面显示是每个账号可用的总积分。');
 const accounts = ref<DataItem[]>([]);
 const hasMoreAccounts = ref(false);
 

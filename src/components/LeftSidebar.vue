@@ -5,15 +5,6 @@
     <div v-if="isVisible" class="left-sidebar">
       <div class="header">
         <img src="../assets/poe_logo.svg" alt="Poe Logo" class="logo" @click="goHome" />
-        <!-- 
-        <button class="header-spacer">
-          <home-icon class="icon" />
-
-        </button> -->
-
-
-
-
         <button class="min-max-toggle" @click.stop="toggleSidebar">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
             <path
@@ -25,18 +16,27 @@
       <div class="sidebar-content">
 
         <div class="top-buttons">
-          <div class="menu-item">
-            <span><strong> Explore</strong></span>
+          <div class="menu-item" @click="openModal">
+
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="9" cy="9" r="7" stroke="#333" stroke-width="2" />
+              <line x1="14.7071" y1="14.2929" x2="18.7071" y2="18.2929" stroke="#333" stroke-width="2"
+                stroke-linecap="round" />
+            </svg>
+            <span><strong> 更多模型</strong></span>
           </div>
-          <div class="menu-item">
-            <span><strong> Create bot</strong></span>
+          <div class="menu-item" @click="goAccountPool">
+            <!-- 添加的 SVG 图标 -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon">
+              <path d="M15 18l-6-6 6-6" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span><strong> 返回账号池</strong></span>
           </div>
         </div>
 
         <div class="chat-history">
           <template v-if="chatHistory.length > 0">
             <div v-for="(chat, index) in chatHistory" :key="index" class="chat-item" @click="loadHistory(chat)">
-              <!-- <img :src="chat.icon" :alt="chat.name" class="chat-icon" /> -->
               <ModelAvatar :modelName="chat.name"></ModelAvatar>
               <div class="chat-info">
                 <div class="chat-header">
@@ -55,7 +55,7 @@
         </div>
 
 
-        <div class="bottom-menu">
+        <!-- <div class="bottom-menu">
           <div class="menu-item">
             <i class="icon-all-chats"></i>
             <span>All chats</span>
@@ -80,7 +80,7 @@
             <i class="icon-feedback"></i>
             <span>Send feedback</span>
           </div>
-        </div>
+        </div> -->
       </div>
 
     </div>
@@ -93,6 +93,8 @@
     </button>
   </div>
 
+  <AIBotsSearchComponet :isVisible="showModal" @close="closeModal" />
+
 
 </template>
 
@@ -101,7 +103,7 @@ import { ref, onMounted, onBeforeUnmount, Ref, watch, nextTick } from 'vue';
 import { useMainStore } from '../stores/main'
 import { storeToRefs } from 'pinia'
 import { HomeIcon } from 'lucide-vue-next';
-
+import AIBotsSearchComponet from './AIBotsSearchComponet.vue';
 import {
   fetchConversation,
   getQueryParam,
@@ -116,6 +118,7 @@ const router = useRouter();
 const route = useRoute();
 const chatHistory: Ref<MessageItem[]> = ref([])
 const conversationHistories: Ref<MessageItem[]> = ref([])
+const store = useMainStore()
 
 
 
@@ -138,23 +141,45 @@ type MessageItem = {
   preview?: string,
 }
 
+const showModal = ref(false);
 
+const openModal = () => {
+  showModal.value = true;
+};
+
+const closeModal = () => {
+  showModal.value = false;
+};
 
 let conversationInterval: any = null;
 
 const loadHistory = async (chatItem: MessageItem) => {
-  message.warning('历史记录加载功能开发中')
-  // const store = useMainStore()
-  // store.setModel(chatItem.model);
-  // await nextTick();
-  // router.push({
-  //   path: '/chat',
-  //   // query: {
-  //   //   client_idx: String(store.client_idx),
-  //   //   client_type: store.client_type,
-  //   // }
-  // })  // 清空localstorag
+  store.setModel(chatItem.model);
+  store.setCurrentChatHistory(chatItem);
+  const query = {
+    client_idx: String(store.client_idx),
+    client_type: store.client_type,
+    conversation_id: chatItem.conversation_id // Add conversation_id to query
+  }
 
+  // Check if we're already on the chat route
+  if (route.path === '/chat') {
+    // If we're already on /chat, use router.replace to update the URL without adding a new history entry
+    await router.replace({ path: '/chat', query })
+    window.location.reload()
+  } else {
+    // If we're not on /chat, use router.push to navigate
+    await router.push({ path: '/chat', query })
+  }
+
+
+
+}
+
+const goAccountPool = async () => {
+
+
+  router.push('/status')
 }
 
 const goHome = async () => {
@@ -172,7 +197,30 @@ const goHome = async () => {
   })  // 清空localstorag
 
 }
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
 
+  const month = date.getMonth() + 1; // getMonth() 返回 0-11，所以要加1
+  const day = date.getDate();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+
+  const formattedHours = hours % 12 || 12; // 转换为12小时制
+  const formattedMinutes = minutes.toString().padStart(2, '0');
+
+  // 检查是否是当天
+  const isToday = date.getDate() === now.getDate() &&
+    date.getMonth() === now.getMonth() &&
+    date.getFullYear() === now.getFullYear();
+
+  if (isToday) {
+    return `${formattedHours}:${formattedMinutes}${ampm}`;
+  } else {
+    return `${month}月${day}日`;
+  }
+}
 const fetchConversationData = async () => {
 
   if (isVisible.value) {
@@ -184,19 +232,33 @@ const fetchConversationData = async () => {
     const apiKey = getQueryParam('api_key') || (localStorage.getItem('SJ_API_KEY') as string)
     try {
       const res = await fetchConversation(clientIdx, clientType, apiKey);
-      if (res) {
+      if (res && res.length > 0) {
         conversationHistories.value = res;
-        // console.log(res)
-        // Update chatHistory with the new data
-        chatHistory.value = res.map((item: MessageItem) => {
-          const lastMessage = item.messages[item.messages.length - 1];
-          return {
-            icon: '@/assets/sun_icon.svg', // You might want to change this based on the model or other factors
-            name: item.model,
-            time: lastMessage.timestamp ? new Date(lastMessage.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '',
-            preview: lastMessage.content.substring(0, 30) + (lastMessage.content.length > 30 ? '...' : '')
-          };
-        });
+        // 更新 chatHistory
+        chatHistory.value = res.map((item: MessageItem) => ({
+          icon: '@/assets/sun_icon.svg',
+          name: item.model,
+          time: formatDate(item.messages[item.messages.length - 1].timestamp) || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          preview: item.preview || item.messages[item.messages.length - 1].content.substring(0, 30) + '...',
+          model: item.model,
+          conversation_id: item.conversation_id,
+          messages: item.messages
+        }));
+      } else {
+        // 如果没有对话记录，设置默认对话
+        chatHistory.value = [{
+          icon: '@/assets/assistant_icon.svg', // 您可以使用适当的图标路径
+          name: 'Assistant',
+          time: formatDate(new Date().toISOString()),
+          preview: '目前还没有对话，赶快来开启一个吧。',
+          model: 'Assistant',
+          conversation_id: 'default_conversation',
+          messages: [{
+            role: 'assistant',
+            content: '目前还没有对话，赶快来开启一个吧。',
+            timestamp: new Date().toISOString()
+          }]
+        }];
       }
     } catch (error) {
       console.error('Failed to fetch conversation:', error);
@@ -222,12 +284,6 @@ onBeforeUnmount(() => {
     clearInterval(conversationInterval);
   }
 });
-
-// type MessageItem = {
-//   messages: Message[]
-//   conversation_id: string
-//   model: string
-// }
 
 
 const isVisible = ref(true);
@@ -397,6 +453,7 @@ const toggleSidebar = () => {
 
 .menu-item {
   display: flex;
+  flex-direction: column;
   /* align-items: center; */
   padding-left: 16px;
   padding-right: 16px;
@@ -417,6 +474,10 @@ const toggleSidebar = () => {
   font-weight: bold;
   font-size: 14px;
   font-weight: 500;
+}
+
+.menu-item:hover {
+  background-color: #e0e0e0;
 }
 
 .chat-history {

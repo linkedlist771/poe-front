@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  node-serve-front:
+    image: llinkedlist/node-serve-front:v1
+    ports:
+      - "1441:1441"
+    volumes:
+      - ./dist:/workspace/dist
+    restart: always
+    command: serve -s /workspace/dist -l tcp://0.0.0.0:1441

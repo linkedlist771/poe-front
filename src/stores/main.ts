@@ -1,12 +1,31 @@
 import { defineStore } from 'pinia'
 const ENABLE_PERSISTENCE = true
 
+
+interface Message {
+  role: string
+  content: string
+  loading?: boolean
+  file?: { type: string; url: string; name: string; loading: boolean }
+  timestamp?: string
+}
+
+interface ChatHistoryItem {
+  messages: Message[]
+  conversation_id: string
+  model: string
+  name: string
+  time: string
+  preview?: string
+}
+
 interface MainState {
   api_key: string
   client_idx: number
   client_type: string
   inputMessage: string
   model: string
+  currentChatHistory: ChatHistoryItem | null
 }
 
 export const useMainStore = defineStore('main', {
@@ -15,7 +34,9 @@ export const useMainStore = defineStore('main', {
     client_idx: 0,
     client_type: '',
     inputMessage: '',
-    model: ''
+    model: '',
+    currentChatHistory: null,
+
   }),
   actions: {
     setApiKey(key: string) {
@@ -32,7 +53,13 @@ export const useMainStore = defineStore('main', {
     },
     setModel(model: string) {
       this.model = model
-    }
+    },
+    setCurrentChatHistory(chatHistory: ChatHistoryItem) {
+      this.currentChatHistory = chatHistory
+    },
+    clearCurrentChatHistory() {
+      this.currentChatHistory = null
+    },
   },
   persist: ENABLE_PERSISTENCE ? {
     key: 'main-store',

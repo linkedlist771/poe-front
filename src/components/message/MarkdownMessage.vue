@@ -162,11 +162,44 @@ md = new MarkdownIt({
 md.use(MermaidPlugin).use(LatexPlugin).use(SvgPlugin)
 
 
+function convertImageReferences(text: string): string {
+  // 构建图像ID到URL的映射
+  const definitionPattern = /^\[([^\]]+)\]:\s*(.*)$/gm;
+  const definitions: { [key: string]: string } = {};
+  let definitionMatch: RegExpExecArray | null;
+
+  while ((definitionMatch = definitionPattern.exec(text)) !== null) {
+    const imageId = definitionMatch[1];
+    const url = definitionMatch[2];
+    definitions[imageId] = url;
+  }
+
+  // 定义替换函数
+  const pattern = /!\[([^\]]*)\]\[([^\]]+)\]/g;
+  let replacementsMade = false;
+
+  const newText = text.replace(pattern, (match, altText, imageId) => {
+    const url = definitions[imageId] || '';
+    replacementsMade = true;
+    return `![${altText}](${url})`;
+  });
+
+  // 如果没有发生替换，返回原始文本
+  if (replacementsMade) {
+    // 移除所有图像定义的行及其前后的空行
+    return newText.replace(/^\s*\[([^\]]+)\]:\s*(.*)\s*$/gm, '').trim();
+  }
+  else {
+    return newText;
+  }
+}
+
+
 const htmlStr = computed(() => {
-  // const strWithouArtifacts = artifactsStr2MDStr(props.text)
+  const computedStr = convertImageReferences(props.text)
   // renderVueCode(props.text)
   // console.log('props.text', props.text)
-  return str2html(props.text || '')
+  return str2html(computedStr || '')
   // str2html(props.text) + (props.loading ? "<span class='typing'></span>" : "")
 })
 
