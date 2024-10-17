@@ -9,5 +9,3 @@ services:
       - ./dist:/workspace/dist
     restart: always
     command: serve -s /workspace/dist -l tcp://0.0.0.0:1441
-    environment:
-      - BASE_URL=http://54.254.143.80:8000
