@@ -153,7 +153,7 @@ const officialBots = ref([
   { name: 'Assistant', icon: '🤖', description: 'General-purpose assistant bot. For queries requiring u...' },
   { name: 'Claude-3.5-Sonnet', icon: '🌟', description: 'Anthropic\'s most powerful model. Excels in complex...' },
   { name: 'FLUX-pro', icon: '🖼️', description: 'State-of-the-art image generation with top-of-the-line...' },
-  { name: 'Playground-v3', icon: '🎮', description: 'Latest image model from Playground, with industry leadi...' },
+  { name: 'photo_createe', icon: '🎮', description: 'Latest image model from Playground, with industry leadi...' },
   { name: 'Web-Search', icon: '🌐', description: 'Web-enabled assistant bot that searches the intern...' },
   { name: 'o1-mini', icon: '🔮', description: 'This OpenAI model is a faster, cheaper version of o1 that is...' },
   { name: 'Ideogram-v2', icon: '🧠', description: 'Latest image model from Ideogram, with industry leading...' },
@@ -171,7 +171,7 @@ const botsForYou = ref([
 const models = ref([
   { name: 'Claude-3.5-Sonnet', icon: '../assets/claude-icon.svg' },
   { name: 'GPT-4o', icon: "../assets/avatars/gpt4o.jepg" },
-  { name: 'GPT-3.5-turbo', icon: '../assets/gpt-turbo-icon.svg' },
+  { name: 'photo_createe', icon: '../assets/gpt-turbo-icon.svg' },
 ]);
 
 const sendMessage = async (messageText: string) => {

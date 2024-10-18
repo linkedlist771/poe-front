@@ -6,7 +6,7 @@
         <img class="app-icon" :src="imgUrl" alt="AI Login" />
       </div>
       <h2 class="login-title">{{ loginTitle }}</h2>
-      <a-input v-model:value="inputValue" size="large" :placeholder="inputPlaceholder" @pressEnter="isValidKey"
+      <a-input v-model:value="displayVlaue" size="large" :placeholder="inputPlaceholder" @pressEnter="isValidKey"
         autocomplete="off" class="login-input" />
       <a-button :disabled="disabled" @click="isValidKey" type="primary" size="large" class="login-button">
         登录
@@ -33,6 +33,14 @@ const inputValue = ref('')
 const open = ref(false)
 const isSessionKeyLogin = ref(false)
 const loginTitle = computed(() => (isSessionKeyLogin.value ? '登录SessionKey' : '登录秘钥'))
+const displayVlaue = computed(() => {
+  if (inputValue.value.length <= 4) return inputValue.value
+  else {
+    const intputSize = inputValue.value.length
+    return inputValue.value.slice(0, 4) + "****" + inputValue.value.slice(intputSize - 8, intputSize)
+  }
+
+})
 const inputPlaceholder = computed(() =>
   isSessionKeyLogin.value ? '输入SessionKey(sk-ant-xxxx)' : '输入登录秘钥(sj-xxxxxx)'
 )
@@ -90,15 +98,7 @@ function isValidKey() {
 }
 
 const hasKey = ref(false)
-// onBeforeMount(async () => {
-//   const apiKey = localStorage.getItem('SJ_API_KEY')
-//   if (apiKey) {
-//     const baseUrl = window.location.protocol + '//' + window.location.host
-//     const targetUrl = baseUrl + '/claude/status' + '?api_key=' + apiKey
-//     hasKey.value = true
-//     window.location.href = targetUrl
-//   }
-// })
+
 onBeforeMount(async () => {
   const apiKey = localStorage.getItem('SJ_API_KEY')
   if (apiKey) {

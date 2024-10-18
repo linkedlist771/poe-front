@@ -129,6 +129,10 @@ const fetchInfoAsync = async () => {
     const isKeyValid = result.is_key_valid
     if (isKeyValid) {
       const expireTime = String(result.expire_time); // 确保 expireTime 是字符串类型
+      const usage_limit = result.usage_limit;
+      const current_usage = result.current_usage;
+      const remaining_usage = usage_limit - current_usage;
+
       if ("Never expire" == expireTime) {
         message.success(`秘钥未激活， 等待激活后显示过期时间。`);
 
@@ -144,6 +148,8 @@ const fetchInfoAsync = async () => {
         }
         message.success(`剩余有效期：${validityPeriod}`);
       }
+      message.info(`剩余使用积分：${remaining_usage}`);
+
     }
   } catch (error) {
     // 处理错误
