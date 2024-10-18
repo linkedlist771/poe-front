@@ -63,7 +63,13 @@ interface DataItem {
 }
 
 const isDarkTheme = ref(false);
-const notice = ref('POE账号不存在时间限制， 只有积分限制，在该账号积分使用完毕之前均可使用， 请注意您的积分消耗速度， 我们会定期重置您的可用积分。 下面显示是每个账号可用的总积分。');
+
+const notice = ref(`
+  <p>
+    1、POE账号是积分制，不存在速率限制，在该账号积分使用完毕之前均可使用，<span class="highlight">请注意您的积分消耗速度</span>，即使在有效期内，<strong>积分消耗完后也将无法使用，需要重新续费增加积分</strong>。<br><br>
+    2、<span class="highlight">请注意您的秘钥有效期</span>，<strong>秘钥过期后将无法使用</strong>，续费会重置积分，不会累积。
+  </p>
+`);
 const accounts = ref<DataItem[]>([]);
 const hasMoreAccounts = ref(false);
 
@@ -160,6 +166,16 @@ onMounted(async () => {
 .header {
   width: 100%;
   margin-bottom: 20px;
+}
+
+.notice p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.highlight {
+  color: #d9534f;
+  font-weight: bold;
 }
 
 .theme-toggle-container {
