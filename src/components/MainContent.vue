@@ -49,23 +49,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Bots for You Section -->
-        <!-- <div class="section">
-          <div class="section-header">
-            <h2>Bots for you</h2>
-            <a href="#" class="see-all" @click="openModal">See all</a>
-          </div>
-          <div class="bot-grid">
-            <div v-for="bot in botsForYou" :key="bot.name" class="bot-item">
-              <img :src="bot.icon" :alt="bot.name" class="bot-icon" />
-              <div class="bot-info">
-                <h3>{{ bot.name }}</h3>
-                <p>{{ bot.description }}</p>
-              </div>
-            </div>
-          </div>
-        </div> -->
       </div>
     </div>
   </div>

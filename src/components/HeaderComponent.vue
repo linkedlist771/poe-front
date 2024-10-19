@@ -32,7 +32,8 @@ import {
 } from 'ant-design-vue';
 
 
-import { sendRequest, getQueryParam, baseSendRequest } from '../api/status'
+import { sendRequest } from '../api/status'
+import { baseUrl } from '../config/constants'
 
 
 
@@ -70,6 +71,35 @@ const closeModal = () => {
   inputValue.value = "";
 };
 
+const updateDeviceId = async () => {
+  const apiKey = localStorage.getItem('SJ_API_KEY')
+  const deviceVerificationUrl = `${baseUrl}/api/v1/device_verification/device/${apiKey}/update`
+  // post
+  try {
+    const response = await fetch(deviceVerificationUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // Include any additional headers if required, e.g., Authorization
+        // 'Authorization': `Bearer ${apiKey}`
+      }
+    })
+
+    if (!response.ok) {
+      // If the response status is not in the range 200-299
+      throw new Error(`Network response was not ok: ${response.statusText}`)
+    }
+
+    const data = await response.json()
+    console.log(data)
+  } catch (error) {
+    console.error('Device status check failed:', error)
+    // Optionally, you can redirect to an error page or the status page
+
+  }
+
+}
+
 const saveValue = () => {
   if (inputValue.value.trim()) {
     localStorage.setItem(KEY, inputValue.value);
@@ -78,6 +108,10 @@ const saveValue = () => {
     showModal.value = false;
     message.success("秘钥保存成功");
     fetchInfoAsync();
+    // TODO: 跟新这个账号的device id的使用情况。 
+    updateDeviceId();
+
+    //
   } else {
     message.error("请输入秘钥");
   }

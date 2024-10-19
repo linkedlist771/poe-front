@@ -36,7 +36,6 @@ export const useMainStore = defineStore('main', {
     inputMessage: '',
     model: '',
     currentChatHistory: null,
-
   }),
   actions: {
     setApiKey(key: string) {
