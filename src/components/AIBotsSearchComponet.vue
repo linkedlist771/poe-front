@@ -6,37 +6,18 @@
                     <div class="modal-header">
                         <button class="close-button" @click="closeModal">&times;</button>
                     </div>
-                    <!-- 添加的公司筛选标签区域 -->
                     <div class="filter-container">
                         <div class="company-tags">
-                            <span v-for="company in allCompanies" :key="company.value"
-                                :class="{ 'tag': true, 'selected': selectedCompanies.includes(company.label) }"
-                                @click="toggleCompanySelection(company.label)">
-                                {{ company.label }}
+                            <span v-for="tag in allTags" :key="tag.value"
+                                :class="{ 'tag': true, 'selected': selectedTags.includes(tag.label) }"
+                                @click="toggleTagSelection(tag.label)">
+                                {{ tag.label }}
                             </span>
                         </div>
                     </div>
                     <div class="search-container">
                         <input type="text" v-model="searchQuery" placeholder="搜索更多机器人">
                     </div>
-                    <!-- <div class="bot-list">
-
-                        <div v-for="[modelName, modelInfo] in Object.entries(filteredModels)" :key="modelName"
-                            class="bot-item" @click="chatWithBot(modelName)">
-                            <ModelAvatar :modelName="modelName" :showName="false"></ModelAvatar>
-                            <div class="bot-info">
-                                <h3>{{ modelName }}</h3>
-                                <p>{{ modelInfo.desc }}</p>
-                                <div class="bot-tags">
-                                    <span v-if="!modelInfo.premium_model" class="tag official">免费</span>
-                                    <span v-else class="tag subscriber">高级</span>
-                                    <span class="tag points">积分: {{ modelInfo.points }}</span>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div> -->
-
                     <div class="bot-list">
                         <ModelItem v-for="[modelName, modelInfo] in Object.entries(filteredModels)" :key="modelName"
                             :modelName="modelName" :modelInfo="modelInfo" @click="chatWithBot"></ModelItem>
@@ -51,7 +32,7 @@
 import { ref, computed } from 'vue';
 import modelData from '../data/models.json';
 import ModelAvatar from './ModelAvatar.vue';
-import ModelItem from './ModelItem.vue'; // 导入新组件
+import ModelItem from './ModelItem.vue';
 
 import { useMainStore } from '../stores/main'
 import { useRouter, useRoute } from 'vue-router';
@@ -73,7 +54,6 @@ const chatWithBot = async (modelName: string) => {
     store.setModel(modelName);
     store.clearCurrentChatHistory();
     const query = {}
-    // 判断当前是否在 /chat 路由
     if (route.path === '/chat') {
         await router.replace({ path: '/chat', query })
         window.location.reload()
@@ -86,43 +66,45 @@ const chatWithBot = async (modelName: string) => {
 
 const searchQuery = ref('');
 
-// 选中的公司列表，存储标签的label
-const selectedCompanies = ref<Array<string>>([]);
+const selectedTags = ref<Array<string>>([]);
 
-// 更新：将所有公司列表修改为包含label和value的对象数组
-const allCompanies = ref<Array<{ label: string, value: string }>>([
+const allTags = ref<Array<{ label: string, value: string }>>([
     { label: "openai", value: "openai" },
     { label: "anthropic", value: "anthropic" },
     { label: "google", value: "google" },
     { label: "alibaba", value: "alibaba" },
     { label: "mistralai", value: "mistralai" },
     { label: "stabilityai", value: "stabilityai" },
-    { label: "文生图", value: "stabilityai" } // 新增的标签
+    { label: "文生图", value: "text2image" }
 ]);
 
-// 切换公司选中状态，基于label
-const toggleCompanySelection = (companyLabel: string) => {
-    if (selectedCompanies.value.includes(companyLabel)) {
-        selectedCompanies.value = selectedCompanies.value.filter(c => c !== companyLabel);
+const toggleTagSelection = (tagLabel: string) => {
+    if (selectedTags.value.includes(tagLabel)) {
+        selectedTags.value = selectedTags.value.filter(t => t !== tagLabel);
     } else {
-        selectedCompanies.value.push(companyLabel);
+        selectedTags.value.push(tagLabel);
     }
 };
 
-// 计算属性：将选中的公司label映射到value
-const effectiveSelectedCompanies = computed(() => {
-    return selectedCompanies.value.map(label => {
-        const company = allCompanies.value.find(c => c.label === label);
-        return company ? company.value : label;
+const effectiveSelectedTags = computed(() => {
+    return selectedTags.value.map(label => {
+        const tag = allTags.value.find(t => t.label === label);
+        return tag ? tag.value : label;
     });
 });
+
 
 const filteredModels = computed(() => {
     return Object.fromEntries(
         Object.entries(modelData).filter(([modelName, modelInfo]) => {
             const matchesQuery = !searchQuery.value || modelName.toLowerCase().includes(searchQuery.value.toLowerCase());
-            const matchesCompany = effectiveSelectedCompanies.value.length === 0 || effectiveSelectedCompanies.value.includes(modelInfo.owned_by);
-            return matchesQuery && matchesCompany;
+            const matchesTags = effectiveSelectedTags.value.length === 0 || effectiveSelectedTags.value.some(tag => {
+                if (tag === 'text2image') {
+                    return modelInfo.text2image === true;
+                }
+                return modelInfo.owned_by === tag;
+            });
+            return matchesQuery && matchesTags;
         })
     );
 });

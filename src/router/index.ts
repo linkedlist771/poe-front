@@ -11,6 +11,9 @@ import { message } from 'ant-design-vue';
 const router = createRouter({
   history: createWebHistory(),
   routes: [
+    // {  path: '',
+    //   redirect: '/'
+    // },
     {
       path: '/',
       name: 'home',
@@ -56,14 +59,6 @@ router.beforeEach(async (to, from, next) => {
           'Content-Type': 'application/json',
         }
       })
-      
-      // if (!response.ok) {
-      //   // If the response status is not in the range 200-299
-      //   // throw new Error(`Network response was not ok: ${response.statusText}`)
-      //   message.error("秘钥不存在，请重新登录。")
-      //   next({ path: '/status' })
-
-      // }
       
       const data = await response.json()
       const status = data.status

@@ -107,9 +107,17 @@ const saveValue = () => {
     inputValue.value = "";
     showModal.value = false;
     message.success("秘钥保存成功");
-    fetchInfoAsync();
-    // TODO: 跟新这个账号的device id的使用情况。 
-    updateDeviceId();
+    try {
+      fetchInfoAsync();
+    }
+    catch {
+
+    }
+    try {
+      // TODO: 跟新这个账号的device id的使用情况。 
+      updateDeviceId();
+    }
+    catch { }
 
     //
   } else {
@@ -166,17 +174,14 @@ const fetchInfoAsync = async () => {
       const usage_limit = result.usage_limit;
       const current_usage = result.current_usage;
       const remaining_usage = usage_limit - current_usage;
-
       if ("Never expire" == expireTime) {
         message.success(`秘钥未激活， 等待激活后显示过期时间。`);
 
       }
       else {
         const validityPeriod = getValidityPeriod(expireTime);
-
         const expireDate = new Date(expireTime.replace(' ', 'T'));
         const daysUntilExpire = Math.ceil((expireDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
-
         if (daysUntilExpire <= 7) {
           message.warning(`秘钥即将过期，剩余${daysUntilExpire}天`);
         }
@@ -185,7 +190,14 @@ const fetchInfoAsync = async () => {
       message.info(`剩余使用积分：${remaining_usage}`);
 
     }
-  } catch (error) {
+    else {
+      message.error(`秘钥无效， 请输入有效的秘钥`)
+      localStorage.removeItem(KEY);
+      storedValue.value = ""
+      inputValue.value = ""
+    }
+  }
+  catch (error) {
     // 处理错误
     console.error(error);
     message.error('获取信息失败');

@@ -3,7 +3,7 @@
     <div class="content-wrapper">
       <div class="header">
         <div class="theme-toggle-container">
-          <a-switch v-model:checked="isDarkTheme" @change="toggleTheme">
+          <a-switch v-model:checked="isDarkTheme">
             <template #checkedChildren>🌙</template>
             <template #unCheckedChildren>☀️</template>
           </a-switch>
@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { sendRequest } from '@/api/status';
 import { message } from 'ant-design-vue';
 import { useRouter, useRoute } from 'vue-router';
@@ -73,9 +73,12 @@ const notice = ref(`
 const accounts = ref<DataItem[]>([]);
 const hasMoreAccounts = ref(false);
 
-const toggleTheme = () => {
-  isDarkTheme.value = !isDarkTheme.value;
-};
+// const toggleTheme = () => {
+//   isDarkTheme.value = !isDarkTheme.value;
+// };
+watch(isDarkTheme, (newValue) => {
+  console.log('Theme changed:', newValue ? 'Dark' : 'Light');
+});
 
 const handleCardClick = (item: DataItem) => {
   // Implement redirection logic here
@@ -144,18 +147,37 @@ onMounted(async () => {
 <style scoped>
 .account-pool {
   min-width: 70vw;
-  min-height: 100vh;
+  height: 100%;
+  /* 修改为 height: 100% */
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  /* 添加 overflow: hidden */
+  background-color: #ffffff;
+  /* Light theme background */
+  color: #000000;
+  /* Light theme text color */
+  transition: background-color 0.3s, color 0.3s;
 }
 
+.account-pool.dark-theme {
+  background-color: #121212;
+  /* Dark theme background */
+  color: #ffffff;
+  /* Dark theme text color */
+}
+
+
 .content-wrapper {
-  flex: 1;
+  flex: 1 1 auto;
+  /* 修改 flex 属性 */
   padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
+  overflow-y: auto;
+  /* 确保内容可以垂直滚动 */
 }
 
 .dark-theme {
@@ -188,7 +210,9 @@ onMounted(async () => {
   background-color: #eff4f9;
   padding: 20px;
   border-radius: 10px;
+  transition: background-color 0.3s, color 0.3s;
 }
+
 
 .notice.dark {
   background-color: #252529;
@@ -205,6 +229,8 @@ onMounted(async () => {
 .account-card {
   border-radius: 10px !important;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, color 0.3s;
+
 }
 
 .account-card:hover {
