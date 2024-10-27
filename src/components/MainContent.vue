@@ -32,7 +32,7 @@
         <!-- Official Bots Section -->
         <div class="section">
           <div class="section-header">
-            <h2>Official bots</h2>
+            <h2>官方模型</h2>
             <a href="#" class="see-all" @click="openModal">See all</a>
           </div>
           <div class="bot-grid">
@@ -49,6 +49,25 @@
             </div>
           </div>
         </div>
+
+
+        <!-- Random Bots Section -->
+        <div class="section">
+          <div class="section-header">
+            <h2>为你准备的模型 </h2>
+            <a href="#" class="see-all" @click="openModal">See all</a>
+          </div>
+          <div class="bot-grid">
+            <div v-for="bot in randomBots" :key="bot.name" class="bot-item" @click="chatWithBot(bot.name)">
+              <ModelAvatar :modelName="bot.name" :showName="false"></ModelAvatar>
+              <div class="bot-info">
+                <h3>{{ bot.name }}</h3>
+                <p>{{ getModelInformation(bot.name).desc.substring(0, 30) + "..." }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -58,7 +77,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { getModelInformation } from '../api/model_utils'
+import { getModelInformation, getRandomModels } from '../api/model_utils'
 import SendMessageButton from './SendMessageButton.vue';
 import { useMainStore } from '../stores/main'
 import ModelAvatar from './ModelAvatar.vue';
@@ -76,6 +95,7 @@ import AIBotsSearchComponet from './AIBotsSearchComponet.vue';
 import { useRouter, useRoute } from 'vue-router';
 // import claudeImage from "@/assets/avatars/gpt3_5.jpeg";
 const showModal = ref(false);
+const randomBots = ref([]);
 
 const openModal = () => {
   showModal.value = true;
@@ -110,6 +130,8 @@ onMounted(async () => {
 
     router.push('/status')
   }
+  randomBots.value = getRandomModels(12);  // Get 12 random bots
+
 }
 )
 
