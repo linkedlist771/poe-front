@@ -799,7 +799,7 @@ onMounted(() => {
     }
 
     .input-area {
-        bottom: 2.3rem;
+        bottom: 0rem;
         padding: 10px;
     }
 
