@@ -115,7 +115,7 @@ const saveValue = () => {
     }
     try {
       // TODO: 跟新这个账号的device id的使用情况。 
-      updateDeviceId();
+      // updateDeviceId();
     }
     catch { }
 
