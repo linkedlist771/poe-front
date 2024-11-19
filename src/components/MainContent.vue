@@ -153,18 +153,18 @@ const chatWithBot = async (modelName: string) => {
 };
 
 
-
 const officialBots = ref([
-  { name: 'Assistant', icon: '🤖', description: 'General-purpose assistant bot. For queries requiring u...' },
+  // { name: 'Assistant', icon: '🤖', description: 'General-purpose assistant bot. For queries requiring u...' },
   { name: 'Claude-3.5-Sonnet', icon: '🌟', description: 'Anthropic\'s most powerful model. Excels in complex...' },
-  { name: 'FLUX-pro', icon: '🖼️', description: 'State-of-the-art image generation with top-of-the-line...' },
-  { name: 'photo_createe', icon: '🎮', description: 'Latest image model from Playground, with industry leadi...' },
-  { name: 'Web-Search', icon: '🌐', description: 'Web-enabled assistant bot that searches the intern...' },
+  { name: 'Claude-3.5-Sonnet-200k', icon: '🌟', description: 'Anthropic\'s most powerful model. Excels in complex...' },
+
+  { name: 'Flux-Pro-1.1-t', icon: '🖼️', description: 'State-of-the-art image generation with top-of-the-line...' },
+  { name: 'stablediffusion3.5-l', icon: '🌐', description: 'Web-enabled assistant bot that searches the intern...' },
   { name: 'o1-mini', icon: '🔮', description: 'This OpenAI model is a faster, cheaper version of o1 that is...' },
-  { name: 'Ideogram-v2', icon: '🧠', description: 'Latest image model from Ideogram, with industry leading...' },
-  { name: 'GPT-4o-Mini', icon: '🤖', description: 'OpenAI\'s latest model. This intelligent small...' },
-  { name: "sdxl-lightning" }
+  // { name: 'Ideogram-v2', icon: '🧠', description: 'Latest image model from Ideogram, with industry leading...' },
+  { name: 'GPT-4o', icon: '🤖', description: 'OpenAI\'s latest model. This intelligent small...' },
 ]);
+
 
 const botsForYou = ref([
   { name: 'PythonAIChat', icon: '🐍', description: 'Python programming how know everythin...' },
