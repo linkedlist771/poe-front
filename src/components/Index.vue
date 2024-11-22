@@ -106,10 +106,10 @@ onMounted(async () => {
     try {
       const res = await sendRequest('/clients_status', 'GET');
       if (res && res.length > 0) {
-        accounts.value = res;
-        hasMoreAccounts.value = res.length >= 10; // Assuming 10 is the page size
+        accounts.value = res.sort((a, b) => b.usage - a.usage);
+        hasMoreAccounts.value = res.length >= 10;
         isLoading.value = false;
-        return true; // 数据获取成功，返回 true
+        return true;
       }
       return false; // 数据为空，返回 false
     } catch (error) {
