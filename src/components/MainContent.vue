@@ -156,6 +156,8 @@ const chatWithBot = async (modelName: string) => {
 
 const officialBots = ref([
   // { name: 'Assistant', icon: '🤖', description: 'General-purpose assistant bot. For queries requiring u...' },
+  { name: 'Claude-3.5-Sonnet-June', icon: '🌟', description: 'Anthropic\'s most powerful model. Excels in complex...' },
+
   { name: 'Claude-3.5-Sonnet', icon: '🌟', description: 'Anthropic\'s most powerful model. Excels in complex...' },
   { name: 'Claude-3.5-Sonnet-200k', icon: '🌟', description: 'Anthropic\'s most powerful model. Excels in complex...' },
 
