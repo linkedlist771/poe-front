@@ -18,9 +18,17 @@
                     <div class="search-container">
                         <input type="text" v-model="searchQuery" placeholder="搜索更多机器人">
                     </div>
-                    <div class="bot-list">
+                    <div class="bot-list" @scroll="handleScroll">
                         <ModelItem v-for="[modelName, modelInfo] in Object.entries(filteredModels)" :key="modelName"
                             :modelName="modelName" :modelInfo="modelInfo" @click="chatWithBot"></ModelItem>
+                        
+                        <div v-if="isLoading" class="loading-indicator">
+                            加载中...
+                        </div>
+                        
+                        <div v-if="!hasMore && Object.keys(filteredModels).length > 0" class="no-more-data">
+                            没有更多数据了
+                        </div>
                     </div>
                 </div>
             </div>
@@ -29,9 +37,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import modelData from '../data/models.json';
-import ModelAvatar from './ModelAvatar.vue';
 import ModelItem from './ModelItem.vue';
 
 import { useMainStore } from '../stores/main'
@@ -93,20 +100,64 @@ const effectiveSelectedTags = computed(() => {
     });
 });
 
+const pageSize = 100; // 每页显示的数量
+const currentPage = ref(1);
+const isLoading = ref(false);
+const hasMore = ref(true);
+
+const allFilteredModels = computed(() => {
+    return Object.entries(modelData).filter(([modelName, modelInfo]) => {
+        const matchesQuery = !searchQuery.value || modelName.toLowerCase().includes(searchQuery.value.toLowerCase());
+        const matchesTags = effectiveSelectedTags.value.length === 0 || effectiveSelectedTags.value.some(tag => {
+            if (tag === 'text2image') {
+                return modelInfo.text2image === true;
+            }
+            return modelInfo.owned_by === tag;
+        });
+        return matchesQuery && matchesTags;
+    });
+});
 
 const filteredModels = computed(() => {
-    return Object.fromEntries(
-        Object.entries(modelData).filter(([modelName, modelInfo]) => {
-            const matchesQuery = !searchQuery.value || modelName.toLowerCase().includes(searchQuery.value.toLowerCase());
-            const matchesTags = effectiveSelectedTags.value.length === 0 || effectiveSelectedTags.value.some(tag => {
-                if (tag === 'text2image') {
-                    return modelInfo.text2image === true;
-                }
-                return modelInfo.owned_by === tag;
-            });
-            return matchesQuery && matchesTags;
-        })
-    );
+    const endIndex = currentPage.value * pageSize;
+    return Object.fromEntries(allFilteredModels.value.slice(0, endIndex));
+});
+
+const loadMore = async () => {
+    if (isLoading.value || !hasMore.value) return;
+    
+    isLoading.value = true;
+    
+    // 模拟异步加载
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    currentPage.value++;
+    
+    // 检查是否还有更多数据
+    if (currentPage.value * pageSize >= allFilteredModels.value.length) {
+        hasMore.value = false;
+    }
+    
+    isLoading.value = false;
+};
+
+const handleScroll = (e: Event) => {
+    const element = e.target as HTMLElement;
+    const { scrollTop, scrollHeight, clientHeight } = element;
+    
+    // 当滚动到距离底部 50px 时加载更多
+    if (scrollHeight - scrollTop - clientHeight < 50) {
+        loadMore();
+    }
+};
+
+const resetPagination = () => {
+    currentPage.value = 1;
+    hasMore.value = true;
+};
+
+watch([searchQuery, selectedTags], () => {
+    resetPagination();
 });
 
 const closeModal = () => {
@@ -190,6 +241,7 @@ input {
 .bot-list {
     max-height: 60vh;
     overflow-y: auto;
+    padding: 10px;
 }
 
 .bot-item {
@@ -241,5 +293,18 @@ input {
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;
+}
+
+.loading-indicator {
+    text-align: center;
+    padding: 10px;
+    color: #666;
+}
+
+.no-more-data {
+    text-align: center;
+    padding: 10px;
+    color: #999;
+    font-size: 14px;
 }
 </style>
