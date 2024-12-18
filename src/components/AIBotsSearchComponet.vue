@@ -112,7 +112,7 @@ const allFilteredModels = computed(() => {
             if (tag === 'text2image') {
                 return modelInfo.text2image === true;
             }
-            return modelInfo.owned_by === tag;
+            return modelInfo.owned_by.toLowerCase() === tag;
         });
         return matchesQuery && matchesTags;
     });
