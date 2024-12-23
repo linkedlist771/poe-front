@@ -373,7 +373,6 @@ async function copyContent(str: string): Promise<boolean> {
   padding-bottom: 5px;
   border-radius: 8px;
   border: 1px solid #e1e0e0;
-  font-size: 18px;
 
   // &>* {
   //   color: black;
@@ -405,7 +404,8 @@ async function copyContent(str: string): Promise<boolean> {
     background-color: #5d5cd6;
     color: white;
     /* 将文字颜色设置为白色 */
-    font-weight: bold
+    font-weight: bold;
+    font-size: 18px;
 
     /* Adjust color as needed */
     /* border-color: #b0ffb0; */
