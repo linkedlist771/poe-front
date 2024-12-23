@@ -15,6 +15,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "@microsoft/fetch-event-source": "^2.0.1",
     "@neilsustc/markdown-it-katex": "^1.0.0",
+    "@pdftron/webviewer": "^11.1.1",
     "@types/node": "^22.7.5",
     "@types/vue": "^2.0.0",
     "@vicons/material": "^0.12.0",
@@ -38,6 +39,7 @@
     "pinia-plugin-persistedstate": "^4.1.1",
     "quasar": "^2.17.0",
     "vue": "^3.5.10",
+    "vue-doc-preview": "^0.3.2",
     "vue-router": "4"
   },
   "devDependencies": {

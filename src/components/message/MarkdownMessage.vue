@@ -4,12 +4,25 @@
 
     <template v-if="files && files.length > 0">
       <div class="file-container" v-for="file in files" :key="file.uid">
-        <div v-if="file.url">
+        <!-- 图片预览 -->
+        <div v-if="file.url && file.url.match(/\.(jpg|jpeg|png|gif|webp)$/i)">
           <a-image :width="100" class="object-cover" :src="file.url" />
         </div>
+        <!-- 其他文件类型预览 -->
         <div class="file-info" v-else>
           <font-awesome-icon :icon="getFileIcon(file)" class="mr-10px" :style="{ width: '20px', height: '20px' }" />
-          <div class="file-name">{{ file.name }}</div>
+          <a 
+            :href="file.url" 
+            target="_blank" 
+            class="file-name hover:text-blue-600 hover:underline"
+            :download="file.name"
+          >
+            {{ file.name }}
+          </a>
+          <font-awesome-icon 
+            icon="download" 
+            class="ml-10px text-gray-500 hover:text-gray-700" 
+          />
         </div>
       </div>
     </template>
@@ -51,6 +64,33 @@
           <path d="M17 16l3 3"></path>
         </svg>
       </button> -->
+    </div>
+
+    <!-- 添加预览模态框 -->
+    <div v-if="showPreview" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div class="bg-white rounded-lg p-4 w-4/5 h-4/5 relative">
+        <button 
+          @click="showPreview = false"
+          class="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+        >
+          关闭
+        </button>
+        
+        <div class="h-full overflow-auto">
+          <!-- 文本预览 -->
+          <pre v-if="previewType === 'text'" class="whitespace-pre-wrap">
+            {{ previewContent }}
+          </pre>
+          
+          <!-- PDF预览 -->
+          <iframe
+            v-if="previewType === 'pdf'"
+            :src="previewContent"
+            class="w-full h-full"
+            type="application/pdf"
+          ></iframe>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -164,6 +204,23 @@ md = new MarkdownIt({
     return (
       `<pre class="hljs hljs_code ">${copyIcon}<code>` + md.utils.escapeHtml(str) + '</code></pre>'
     )
+  },
+  render: {
+    link(tokens, idx) {
+      const token = tokens[idx]
+      const href = token.attrGet('href')
+      const fileExt = href.split('.').pop().toLowerCase()
+      
+      // 如果是可预览的文件类型
+      if (['txt', 'md', 'json', 'pdf'].includes(fileExt)) {
+        return `<a href="javascript:void(0)" 
+          class="text-blue-500 hover:text-blue-700 underline" 
+          @click="handleFilePreview('${href}')">${token.content}</a>`
+      }
+      
+      // 其他链接保持原有处理方式
+      return false // 使用默认渲染
+    }
   }
 })
 // 在使用 katex 插件之前先禁用默认的 $ 处理
@@ -295,6 +352,39 @@ async function copyContent(str: string): Promise<boolean> {
     return true
   } catch (err) {
     return false
+  }
+}
+
+const showPreview = ref(false)
+const previewContent = ref('')
+const previewType = ref('')
+
+const handleFilePreview = async (url) => {
+  const fileExt = url.split('.').pop().toLowerCase()
+  
+  // 如果是图片，保持原有逻辑
+  if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExt)) {
+    // 保持原有的图片预览逻辑
+    return
+  }
+
+  try {
+    // 对于文本文件和PDF
+    if (['txt', 'md', 'json', 'pdf'].includes(fileExt)) {
+      const response = await fetch(url)
+      
+      if (fileExt === 'pdf') {
+        previewType.value = 'pdf'
+        previewContent.value = url // PDF直接使用URL
+      } else {
+        previewType.value = 'text'
+        previewContent.value = await response.text()
+      }
+      
+      showPreview.value = true
+    }
+  } catch (error) {
+    console.error('预览文件失败:', error)
   }
 }
 </script>
@@ -449,7 +539,7 @@ async function copyContent(str: string): Promise<boolean> {
       color: red; // 蓝色文本
       background-color: #f2f1ea; // 白色背景
       padding: 1px 2px;
-      font-family: 'Consolas', 'Courier New', monospace; // ���用Consolas或其他等宽字体
+      font-family: 'Consolas', 'Courier New', monospace; // 用Consolas或其他等宽字体
       font-size: 1em; // 保持与周围文本相同的大小
       font-weight: normal; // 不加粗
       border: 1px solid #cccccc; // 浅灰色边框
@@ -574,5 +664,42 @@ async function copyContent(str: string): Promise<boolean> {
     // 给上面的padding加一点
     padding: 2px 4px;
   }
+}
+
+.file-container {
+  margin: 10px 0;
+  padding: 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+}
+
+.file-name {
+  margin: 0 10px;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #1890ff;  // 添加链接颜色
+  text-decoration: none;
+  
+  &:hover {
+    text-decoration: underline;
+    color: #40a9ff;
+  }
+}
+
+.mr-10px {
+  margin-right: 10px;
+}
+
+.ml-10px {
+  margin-left: 10px;
 }
 </style>

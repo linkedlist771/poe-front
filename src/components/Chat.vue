@@ -37,7 +37,12 @@
                                 <div class="message-content">
                                     <template v-if="true">
                                         <MarkDownMessage :text="item.content" :index="index" :role="item.role"
-                                            :files="item.files" v-if="!item.loading"></MarkDownMessage>
+                                            :files="item.message_attachment_file_paths ? item.message_attachment_file_paths.map(file => ({
+                                                uid: file,
+                                                name: file.split('/').pop(),
+                                                status: 'done',
+                                                url: `${baseUrl}/api/v1/files/uploaded_files/${file.split('/').pop()}`
+                                            })) : item.files" v-if="!item.loading"></MarkDownMessage>
                                         <a-spin size="large" v-else />
                                     </template>
                                 </div>
@@ -100,6 +105,7 @@ import ModelCard from './ModelCard.vue';
 
 import type { UploadChangeParam } from 'ant-design-vue';
 import { getAvatarForModel } from '../api/model_utils'
+import { baseUrl } from '../config/constants'
 
 
 
@@ -211,7 +217,7 @@ const scrollToBottom = throttle(function (force?: boolean) {
                 //         left: 0,
                 //         behavior: 'smooth'
                 //     });
-                // }, 100); // 100ms 延迟，可以���据需要调整
+                // }, 100); // 100ms 延迟，可以根据需要调整
             }
         }
     })
@@ -374,7 +380,7 @@ type Message = {
     file?: { type: string; url: string; name: string; loading: boolean }
     timestamp?: string
     files?: any[] // Add this line
-
+    message_attachment_file_paths?: string[] // Add this line
 }
 
 
