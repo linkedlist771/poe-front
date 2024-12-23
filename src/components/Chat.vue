@@ -454,10 +454,11 @@ onMounted(() => {
     padding-bottom: 80px;
     /* Add this line to make room for the input area */
 
-    width: 100%;
-    max-width: 800px;
+    width: 90%;
+    max-width: 1200px;
     margin: 0 auto;
     overflow-y: auto;
+    padding: 0 2rem;
 }
 
 .model-info {
@@ -609,7 +610,7 @@ onMounted(() => {
     text-align: left;
 }
 
-/* 确保消息框最大宽度不超过页面宽度 */
+/* 确保消息框最大宽度不超过页面宽度
 .chat-area {
     padding-top: 60px;
     padding-bottom: 80px;
@@ -617,7 +618,7 @@ onMounted(() => {
     max-width: 100%;
     margin: 0 auto;
     overflow-y: auto;
-}
+} */
 
 .message-avatar {
     margin-right: 10px;
@@ -660,9 +661,10 @@ onMounted(() => {
     bottom: 0rem;
     left: 0;
     right: 0;
-    width: 100%;
+    width: 90%;
     background-color: #ffffff;
     padding: 15px;
+    
     /* box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); */
     display: flex;
     justify-content: center;
