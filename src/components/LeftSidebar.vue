@@ -37,7 +37,7 @@
         <div class="chat-history">
           <template v-if="chatHistory.length > 0">
             <div v-for="(chat, index) in chatHistory" :key="index" class="chat-item" @click="loadHistory(chat)">
-              <ModelAvatar :modelName="chat.name"></ModelAvatar>
+              <ModelAvatar :modelName="chat.name" class="model-avatar"></ModelAvatar>
               <div class="chat-info">
                 <div class="chat-header">
                   <span class="chat-name">{{ chat.name }}</span>
@@ -400,6 +400,12 @@ const toggleSidebar = () => {
 
 }
 
+.model-avatar{
+  transform: scale(0.8); /* 缩小到原来的 80% */
+
+
+}
+
 .chat-item {
   display: flex;
   align-items: center;
@@ -425,13 +431,9 @@ const toggleSidebar = () => {
 .top-buttons {
   display: flex;
   justify-content: space-between;
-  /* padding: 0px; */
-  padding-right: 10px;
-  padding-left: 10px;
-
+  padding: 10px;
   border-bottom: 1px solid #e0e0e0;
-  flex-direction: row;
-  gap: 12px;
+  gap: 8px;
 }
 
 .fixed-toggle {
@@ -453,25 +455,17 @@ const toggleSidebar = () => {
 
 .menu-item {
   display: flex;
-  flex-direction: column;
-  /* align-items: center; */
-  padding-left: 16px;
-  padding-right: 16px;
-  /* width: 18rem; */
-  min-width: 6rem;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  align-items: center;
+  flex: 1;
+  padding: 12px;
   background-color: #f7f7f7;
   border-radius: 8px;
-  margin-bottom: 8px;
-  /* margin-right: px; */
   cursor: pointer;
   font-weight: bold;
 }
 
 .menu-item span {
-  flex-grow: 1;
-  font-weight: bold;
+  margin-left: 4px;
   font-size: 14px;
   font-weight: 500;
 }
@@ -484,6 +478,7 @@ const toggleSidebar = () => {
   flex-grow: 1;
   min-height: 50vh;
   overflow-y: auto;
+  padding: 0rem 1rem;
 }
 
 .chat-header {
@@ -514,6 +509,7 @@ border-bottom: 1px solid #e0e0e0;
 
 .chat-name {
   font-weight: bold;
+  font-size: 14px;
 }
 
 .chat-preview {

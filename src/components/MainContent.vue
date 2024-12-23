@@ -38,10 +38,10 @@
           <div class="bot-grid">
             <div v-for="bot in officialBots" :key="bot.name" class="bot-item" @click="chatWithBot(bot.name)">
               <!-- <img :src="bot.icon" :alt="bot.name" class="bot-icon" /> -->
-              <ModelAvatar :modelName="bot.name" :showName="false"></ModelAvatar>
+              <ModelAvatar :modelName="bot.name" :showName="false" class="model-avatar"></ModelAvatar>
 
               <div class="bot-info">
-                <h3>{{ bot.name }}</h3>
+                <h3>{{ bot.name.length > 15 ? bot.name.slice(0, 12) + '...' : bot.name }}</h3>
                 <p>{{ getModelInformation(bot.name).desc.substring(0, 30) + "..." }}</p>
               </div>
               <!-- <ModelItem v-for="bot in officialBots" :key="bot.name" :modelName="bot.name"
@@ -242,6 +242,14 @@ const selectModel = (index: number) => {
   /* Add some space between buttons */
 
 }
+
+.model-avatar {
+  display: flex;
+  /* padding-top: 1rem; */
+
+  /* padding-bottom: 10; */
+}
+
 
 .model-button:hover {
   background-color: #e8e8e8;
