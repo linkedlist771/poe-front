@@ -67,6 +67,13 @@ import MermaidPlugin from '../../plugins/mermaid'
 import LatexPlugin from '../../plugins/latex'
 import SvgPlugin from '../../plugins/svg'
 import { message } from 'ant-design-vue'
+// import katex from 'katex'
+import 'katex/dist/katex.min.css'
+import texmath from 'markdown-it-texmath'
+import katex from '@neilsustc/markdown-it-katex'
+
+import mk from 'markdown-it-katex'
+import math from 'markdown-it-math'
 
 
 
@@ -126,6 +133,7 @@ const props = withDefaults(
 
 let md: MarkdownIt
 md = new MarkdownIt({
+  html: true,
   breaks: true,
   highlight: function (str, lang) {
     let highlightedText = ''
@@ -158,9 +166,14 @@ md = new MarkdownIt({
     )
   }
 })
-
-md.use(MermaidPlugin).use(LatexPlugin).use(SvgPlugin)
-
+// 在使用 katex 插件之前先禁用默认的 $ 处理
+// 直接使用 katex 插件即可
+md.use(katex, {
+  throwOnError: false,
+  errorColor: '#cc0000',
+  strict: false,
+  trust: true
+}).use(MermaidPlugin).use(SvgPlugin)
 
 function convertImageReferences(text: string): string {
   // 构建图像ID到URL的映射
@@ -194,13 +207,31 @@ function convertImageReferences(text: string): string {
   }
 }
 
+function normalizeLatex(text: string): string {
+  // 处理 inline math \( ... \)
+  text = text.replace(/\\\(\s*(.*?)\s*\\\)/g, (match, content) => {
+    // 只去掉开头和结尾的空格
+    const trimmedContent = content.trim();
+    return `$${trimmedContent}$`;
+  });
+  
+  // 处理 display math \[ ... \]
+  text = text.replace(/\\\[\s*(.*?)\s*\\\]/g, (match, content) => {
+    // 只去掉开头和结尾的空格
+    const trimmedContent = content.trim();
+    return `$$${trimmedContent}$$`;
+  });
+  
+  return text;
+}
+
 
 const htmlStr = computed(() => {
-  const computedStr = convertImageReferences(props.text)
-  // renderVueCode(props.text)
-  // console.log('props.text', props.text)
-  return str2html(computedStr || '')
-  // str2html(props.text) + (props.loading ? "<span class='typing'></span>" : "")
+  let computedStr = props.text
+   computedStr = convertImageReferences(computedStr);
+   computedStr = normalizeLatex(computedStr);
+
+  return str2html(computedStr || '');
 })
 
 
@@ -346,7 +377,20 @@ async function copyContent(str: string): Promise<boolean> {
   // &>* {
   //   color: black;
   // }
-
+  // .katex-display {
+  //   margin: 1em 0;
+  //   overflow-x: auto;
+  //   overflow-y: hidden;
+  // }
+  
+  // .katex {
+  //   font-size: 1.1em;
+  // }
+  
+  // .katex-inline {
+  //   display: inline-block;
+  //   padding: 0 0.2em;
+  // }
 
   &.assistant-content {
     background-color: #f7f7f7;
@@ -403,7 +447,7 @@ async function copyContent(str: string): Promise<boolean> {
       color: red; // 蓝色文本
       background-color: #f2f1ea; // 白色背景
       padding: 1px 2px;
-      font-family: 'Consolas', 'Courier New', monospace; // 使用Consolas或其他等宽字体
+      font-family: 'Consolas', 'Courier New', monospace; // ���用Consolas或其他等宽字体
       font-size: 1em; // 保持与周围文本相同的大小
       font-weight: normal; // 不加粗
       border: 1px solid #cccccc; // 浅灰色边框

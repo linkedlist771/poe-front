@@ -78,7 +78,9 @@ const props = defineProps<{
 }
 
 .custom-card {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
+    background-color: #f7f7f7;
+
 }
 
 .custom-card :deep(.ant-card-body) {

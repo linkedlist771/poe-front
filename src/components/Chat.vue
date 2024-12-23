@@ -211,7 +211,7 @@ const scrollToBottom = throttle(function (force?: boolean) {
                 //         left: 0,
                 //         behavior: 'smooth'
                 //     });
-                // }, 100); // 100ms 延迟，可以根据需要调整
+                // }, 100); // 100ms 延迟，可以���据需要调整
             }
         }
     })
@@ -450,7 +450,7 @@ onMounted(() => {
 }
 
 .chat-area {
-    padding-top: 60px;
+    padding-top: 40px;
     padding-bottom: 80px;
     /* Add this line to make room for the input area */
 
@@ -458,11 +458,11 @@ onMounted(() => {
     max-width: 1200px;
     margin: 0 auto;
     overflow-y: auto;
-    padding: 0 2rem;
+    padding: 4rem 2rem;
 }
 
 .model-info {
-    background-color: #f7f7f7;
+    /* background-color: #f7f7f7; */
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 20px;
@@ -571,17 +571,12 @@ onMounted(() => {
 
 /* 用户消息内容样式 */
 .user-message .message-content {
-    max-width: 90%;
+    max-width: fit-content;
     display: inline-block;
-    /* 允许消息框根据内容自适应宽度 */
-
-    /* 设置用户消息的最大宽度，可根据需要调整 */
-    /* background-color: #daf1ff; */
-    /* text-align: right; */
-    /* 内容右对齐 */
     padding: 10px 15px;
     border-radius: 15px;
     word-wrap: break-word;
+    margin-left: auto;
 }
 
 /* 隐藏用户头像 */
@@ -591,7 +586,7 @@ onMounted(() => {
 
 /* 设置消息内容的样式 */
 .message-content {
-    max-width: 80%;
+    max-width: 90%;
     padding: 10px 15px;
     border-radius: 15px;
     position: relative;
@@ -661,10 +656,9 @@ onMounted(() => {
     bottom: 0rem;
     left: 0;
     right: 0;
-    width: 90%;
+    width: 100%;
     background-color: #ffffff;
     padding: 15px;
-    
     /* box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); */
     display: flex;
     justify-content: center;
