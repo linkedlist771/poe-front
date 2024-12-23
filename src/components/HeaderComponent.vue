@@ -219,6 +219,7 @@ onMounted(() => {
   background: #fff;
   padding: 0 20px;
   width: calc(100% - 40rem);
+  z-index: 1000;
 }
 
 .header-content {

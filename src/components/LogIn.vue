@@ -18,7 +18,8 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import imgUrl from '@/assets/claude-ai-icon.png'
+// import imgUrl from '@/assets/claude-ai-icon.png'
+import imgUrl from '@/assets/poe_logo.svg'
 import { message } from 'ant-design-vue'
 import { baseUrl } from '../config/constants'
 import { ref, computed, onBeforeMount, onMounted } from 'vue'
@@ -121,14 +122,14 @@ onMounted(() => {
 }
 
 .icon-container {
-  background-color: #f0f2f5;
+  // background-color: #f0f2f5;
   border-radius: 50%;
   padding: 15px;
   margin-bottom: 20px;
 }
 
 .app-icon {
-  width: 60px;
+  width: 140px;
   height: auto;
 }
 

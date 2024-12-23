@@ -26,6 +26,11 @@
             </div>
         </div>
         <div class="button-group">
+            <button class="plugin-button" @click="togglePlugin" aria-label="Open plugins">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="plugin-icon">
+                    <path d="M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5C13 2.12 11.88 1 10.5 1S8 2.12 8 3.5V5H4c-1.1 0-1.99.9-1.99 2v3.8H3.5c1.49 0 2.7 1.21 2.7 2.7s-1.21 2.7-2.7 2.7H2V20c0 1.1.9 2 2 2h3.8v-1.5c0-1.49 1.21-2.7 2.7-2.7 1.49 0 2.7 1.21 2.7 2.7V22H17c1.1 0 2-.9 2-2v-4h1.5c1.38 0 2.5-1.12 2.5-2.5S21.88 11 20.5 11z"/>
+                </svg>
+            </button>
             <button class="addFiles" aria-label="Add attachment">
                 <a-upload :before-upload="beforeUpload" :accept="accept" v-model:file-list="fileList" :max-count="5"
                     :customRequest="customRequest" @change="handleChange" :show-upload-list="false">
@@ -53,13 +58,14 @@
             </button>
         </div>
     </div>
+    <PluginPanel ref="pluginPanelRef" />
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, nextTick, watch } from 'vue';
 import type { UploadChangeParam, UploadProps } from 'ant-design-vue'
 import { message } from 'ant-design-vue'
-
+import PluginPanel from './PluginPanel.vue';
 
 const accept = 'image/*,.pdf,.doc,.docx,.csv,.txt,.html,.htm'
 const fileList = ref<UploadChangeParam['fileList']>([]);
@@ -206,6 +212,14 @@ onMounted(() => {
         textareaRef.value.addEventListener('input', adjustTextareaHeight);
     }
 });
+
+const pluginPanelRef = ref();
+
+const togglePlugin = () => {
+    if (pluginPanelRef.value) {
+        pluginPanelRef.value.isOpen = !pluginPanelRef.value.isOpen;
+    }
+};
 </script>
 
 <style scoped>
@@ -386,5 +400,29 @@ onMounted(() => {
     align-items: center;
     justify-content: center;
     height: 100%;
+}
+
+.plugin-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    margin: 0 2px;
+    transition: all 0.3s ease;
+}
+
+.plugin-button:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+}
+
+.plugin-icon {
+    width: 24px;
+    height: 24px;
+    fill: #666;
+}
+
+.plugin-button:hover .plugin-icon {
+    fill: #333;
 }
 </style>
