@@ -80,6 +80,11 @@
                 </button>
             </div>
 
+            <PluginPanel 
+                v-model:plugins="activePlugins"
+                ref="pluginPanelRef"
+            />
+
         </div>
     </div>
 </template>
@@ -106,6 +111,7 @@ import ModelCard from './ModelCard.vue';
 import type { UploadChangeParam } from 'ant-design-vue';
 import { getAvatarForModel } from '../api/model_utils'
 import { baseUrl } from '../config/constants'
+import PluginPanel from './PluginPanel.vue';
 
 
 
@@ -227,6 +233,8 @@ let timeoutId: any = null;
 
 // const addFiles 
 
+const activePlugins = ref<string[]>([]);  // 用于存储激活的插件名字
+
 const sendMessage = async (messageText: string) => {
     isSend.value = !isSend.value
     if (!isSend.value) {
@@ -258,7 +266,8 @@ const sendMessage = async (messageText: string) => {
         files: uploadFileRes.value,
         conversation_id: conversation_id.value,
         need_web_search: false, // 添加这一行
-        need_artifacts: false
+        need_artifacts: false,
+        plugins: activePlugins.value,  // 添加激活的插件列表
     }
 
     let resultText = ''

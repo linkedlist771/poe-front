@@ -26,7 +26,7 @@
         </div>
 
         <div class="plugin-grid">
-            <div v-for="plugin in plugins" 
+            <div v-for="plugin in pluginsList" 
                  :key="plugin.id" 
                  class="plugin-item"
                  :class="{ 'plugin-active': isPluginActive(plugin) }"
@@ -43,12 +43,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import type { Plugin } from '../types/plugin';
+
+const props = defineProps<{
+    plugins: string[]
+}>();
 
 const isOpen = ref(false);
-const activePlugins = ref<any[]>([]);
+const activePlugins = ref<Plugin[]>([]);
+const pluginsValue = ref<string[]>(props.plugins || []);
 
-const plugins = [
+const pluginsList = [
     {
         id: 1,
         name: '联网搜索',
@@ -61,21 +67,33 @@ const plugins = [
         description: '基于Vue3的artifacts， 支持交互式渲染',
         icon: '/path/to/bilibili-icon.png'
     },
-    // 添加更多插件...
 ];
 
-const isPluginActive = (plugin: any) => {
+const isPluginActive = (plugin: Plugin) => {
     return activePlugins.value.some(p => p.id === plugin.id);
 };
 
-const togglePlugin = (plugin: any) => {
+const emit = defineEmits(['update:plugins']);
+
+const togglePlugin = (plugin: Plugin) => {
     const index = activePlugins.value.findIndex(p => p.id === plugin.id);
     if (index === -1) {
         activePlugins.value.push(plugin);
+        emit('update:plugins', [...(pluginsValue.value || []), plugin.name]);
     } else {
         activePlugins.value.splice(index, 1);
+        const nameIndex = pluginsValue.value.indexOf(plugin.name);
+        if (nameIndex > -1) {
+            const newPlugins = [...pluginsValue.value];
+            newPlugins.splice(nameIndex, 1);
+            emit('update:plugins', newPlugins);
+        }
     }
 };
+
+watch(() => props.plugins, (newValue) => {
+    pluginsValue.value = newValue || [];
+}, { immediate: true });
 
 const close = () => {
     isOpen.value = false;
