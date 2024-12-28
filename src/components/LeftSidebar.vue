@@ -34,24 +34,59 @@
           </div>
         </div>
 
-        <div class="chat-history">
-          <template v-if="chatHistory.length > 0">
-            <div v-for="(chat, index) in chatHistory" :key="index" class="chat-item" @click="loadHistory(chat)">
-              <ModelAvatar :modelName="chat.name" class="model-avatar"></ModelAvatar>
-              <div class="chat-info">
-                <div class="chat-header">
-                  <span class="chat-name">{{ chat.name }}</span>
-                  <span class="chat-time">{{ chat.time }}</span>
+        <div class="common-models">
+          <div class="section-header">
+            <div class="section-title">常用模型</div>
+            <button class="expand-button" @click="toggleModelList">
+              <svg 
+                class="expand-icon" 
+                :class="{ 'expanded': isModelListExpanded }" 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="16" 
+                height="16" 
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </button>
+          </div>
+          <div class="model-list">
+            <div v-for="model in displayedModels" 
+                 :key="model.name" 
+                 class="model-item"
+                 @click="startNewChat(model.name)">
+              <ModelAvatar :modelName="model.name" class="model-avatar"></ModelAvatar>
+              <span class="model-name">{{ model.name }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-history-container">
+          <div class="section-title">历史对话</div>
+          <div class="chat-history">
+            <template v-if="chatHistory.length > 0">
+              <div v-for="(chat, index) in chatHistory" :key="index" class="chat-item" @click="loadHistory(chat)">
+                <ModelAvatar :modelName="chat.name" class="model-avatar"></ModelAvatar>
+                <div class="chat-info">
+                  <div class="chat-header">
+                    <span class="chat-name">{{ chat.name }}</span>
+                    <span class="chat-time">{{ chat.time }}</span>
+                  </div>
+                  <span class="chat-preview">{{ chat.preview }}</span>
                 </div>
-                <span class="chat-preview">{{ chat.preview }}</span>
               </div>
-            </div>
-          </template>
-          <template v-else>
-            <div class="spin-container">
-              <a-spin size="large" />
-            </div>
-          </template>
+            </template>
+            <template v-else>
+              <div class="spin-container">
+                <a-spin size="large" />
+              </div>
+            </template>
+          </div>
         </div>
 
 
@@ -99,7 +134,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, Ref, watch, nextTick } from 'vue';
+import { ref, onMounted, onBeforeUnmount, Ref, watch, nextTick, computed } from 'vue';
 import { useMainStore } from '../stores/main'
 import { storeToRefs } from 'pinia'
 import { HomeIcon } from 'lucide-vue-next';
@@ -153,27 +188,24 @@ const closeModal = () => {
 
 let conversationInterval: any = null;
 
+const commonModels = [
+  { name: 'Claude-3.5-Sonnet-June', icon: '../assets/claude-icon.svg' },  
+  { name: 'Claude-3.5-Sonnet', icon: '../assets/claude-icon.svg' },
+  { name: 'GPT-4o', icon: "../assets/avatars/gpt4o.jepg" },
+  { name: 'gemini-2.0-flash', icon: '../assets/gemini.jepg' },
+]
+
 const loadHistory = async (chatItem: MessageItem) => {
   store.setModel(chatItem.model);
   store.setCurrentChatHistory(chatItem);
   const query = {
     client_idx: String(store.client_idx),
     client_type: store.client_type,
-    conversation_id: chatItem.conversation_id // Add conversation_id to query
+    conversation_id: chatItem.conversation_id
   }
 
-  // Check if we're already on the chat route
-  if (route.path === '/chat') {
-    // If we're already on /chat, use router.replace to update the URL without adding a new history entry
-    await router.replace({ path: '/chat', query })
-    window.location.reload()
-  } else {
-    // If we're not on /chat, use router.push to navigate
-    await router.push({ path: '/chat', query })
-  }
-
-
-
+  await router.replace({ path: '/chat', query })
+  window.location.reload() // 强制刷新页面
 }
 
 const goAccountPool = async () => {
@@ -201,7 +233,7 @@ function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const now = new Date();
 
-  const month = date.getMonth() + 1; // getMonth() 返回 0-11，所以要加1
+  const month = date.getMonth() + 1; // getMonth() 返回 0-11，所以加1
   const day = date.getDate();
   const hours = date.getHours();
   const minutes = date.getMinutes();
@@ -327,6 +359,34 @@ onBeforeUnmount(() => {
 const toggleSidebar = () => {
   isVisible.value = !isVisible.value;
 };
+
+const startNewChat = async (modelName: string) => {
+  store.setModel(modelName);
+  store.setCurrentChatHistory(null); // 清空当前对话历史
+  
+  const query = {
+    client_idx: String(store.client_idx),
+    client_type: store.client_type,
+  }
+
+  if (route.path === '/chat') {
+    await router.replace({ path: '/chat', query })
+    window.location.reload()
+  } else {
+    await router.push({ path: '/chat', query })
+  }
+}
+
+const isModelListExpanded = ref(false);
+
+const toggleModelList = () => {
+  isModelListExpanded.value = !isModelListExpanded.value;
+};
+
+// 计算要显示的模型列表
+const displayedModels = computed(() => {
+  return isModelListExpanded.value ? commonModels : [commonModels[0]];
+});
 </script>
 
 <style scoped>
@@ -476,9 +536,8 @@ const toggleSidebar = () => {
 
 .chat-history {
   flex-grow: 1;
-  min-height: 50vh;
   overflow-y: auto;
-  padding: 0rem 1rem;
+  padding: 0 1rem;
 }
 
 .chat-header {
@@ -533,5 +592,91 @@ border-bottom: 1px solid #e0e0e0;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.section-title {
+  padding: 12px 16px;
+  font-weight: bold;
+  color: #666;
+  font-size: 14px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.common-models {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.model-list {
+  padding: 8px;
+  transition: max-height 0.3s ease;
+}
+
+.model-item {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.model-item:hover {
+  background-color: #f0f0f0;
+}
+
+.model-avatar {
+  transform: scale(0.8);
+  margin-right: 8px;
+}
+
+.model-name {
+  font-size: 14px;
+  color: #333;
+}
+
+.chat-history {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.chat-history .chat-item {
+  margin: 4px 8px;
+  border-radius: 8px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 8px;
+}
+
+.expand-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+}
+
+.expand-button:hover {
+  color: #333;
+}
+
+.expand-icon {
+  transition: transform 0.3s ease;
+}
+
+.expand-icon.expanded {
+  transform: rotate(180deg);
 }
 </style>

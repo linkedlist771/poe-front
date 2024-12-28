@@ -216,9 +216,10 @@ onMounted(() => {
 const pluginPanelRef = ref();
 
 const togglePlugin = () => {
-    if (pluginPanelRef.value) {
-        pluginPanelRef.value.isOpen = !pluginPanelRef.value.isOpen;
-    }
+    message.warning('插件功能暂未开放');
+    // if (pluginPanelRef.value) {
+    //     pluginPanelRef.value.isOpen = !pluginPanelRef.value.isOpen;
+    // }
 };
 </script>
 

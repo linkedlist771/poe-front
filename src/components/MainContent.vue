@@ -171,9 +171,10 @@ const officialBots = ref([
 
 
 const models = ref([
+  { name: 'Claude-3.5-Sonnet-June', icon: '../assets/claude-icon.svg' },  
   { name: 'Claude-3.5-Sonnet', icon: '../assets/claude-icon.svg' },
   { name: 'GPT-4o', icon: "../assets/avatars/gpt4o.jepg" },
-  { name: 'photo_createe', icon: '../assets/gpt-turbo-icon.svg' },
+  { name: 'gemini-2.0-flash', icon: '../assets/gemini.jepg' },
 ]);
 
 const sendMessage = async (messageText: string) => {
