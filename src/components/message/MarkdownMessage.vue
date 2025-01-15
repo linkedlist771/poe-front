@@ -284,10 +284,16 @@ function normalizeLatex(text: string): string {
 
 
 const htmlStr = computed(() => {
-  let computedStr = props.text
-   computedStr = convertImageReferences(computedStr);
-   computedStr = normalizeLatex(computedStr);
-
+  let computedStr = props.text;
+  
+  // 如果是用户消息，直接返回文本内容，不进行markdown渲染
+  if (props.role === 'user') {
+    return computedStr;
+  }
+  
+  // 对于其他角色（assistant, system），继续进行markdown渲染
+  computedStr = convertImageReferences(computedStr);
+  computedStr = normalizeLatex(computedStr);
   return str2html(computedStr || '');
 })
 
