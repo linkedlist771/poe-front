@@ -30,6 +30,7 @@
     "lucide-vue-next": "^0.452.0",
     "markdown-it": "^14.1.0",
     "markdown-it-katex": "^2.0.3",
+    "markdown-it-math": "^4.1.1",
     "markdown-it-texmath": "^1.0.0",
     "mathjax": "^3.2.2",
     "mermaid": "^11.3.0",

@@ -46,12 +46,14 @@ export function getQueryParam(key: string) {
   return urlParams.get(key)
 }
 
-
-
 export async function fetchConversation(
   clientIdx: number,
   conversationType: string,
-  apiKey: string
+  apiKey: string,
+  pagination?: {
+    page: number;
+    page_size: number;
+  }
 ) {
   try {
     const response = await fetch(conversationHistoryUrl, {
@@ -63,13 +65,13 @@ export async function fetchConversation(
       body: JSON.stringify({
         client_idx: clientIdx,
         conversation_type: conversationType,
-        api_key: apiKey
+        api_key: apiKey,
+        page: pagination?.page,
+        page_size: pagination?.page_size
       })
     })
-    const responseData = await response.json() // 解析 JSON 数据并存储
-
-    // console.log(responseData)
-    return responseData // Return the parsed JSON data
+    const responseData = await response.json()
+    return responseData
   } catch (error) {
     console.error('Error:', error)
   }

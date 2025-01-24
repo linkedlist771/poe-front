@@ -21,6 +21,7 @@
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="9" cy="9" r="7" stroke="#333" stroke-width="2" />
               <line x1="14.7071" y1="14.2929" x2="18.7071" y2="18.2929" stroke="#333" stroke-width="2"
+              
                 stroke-linecap="round" />
             </svg>
             <span><strong> 更多模型</strong></span>
@@ -80,6 +81,9 @@
                   <span class="chat-preview">{{ chat.preview }}</span>
                 </div>
               </div>
+              <div v-if="isLoading" class="loading-spinner">
+                <a-spin size="small" />
+              </div>
             </template>
             <template v-else>
               <div class="spin-container">
@@ -89,33 +93,6 @@
           </div>
         </div>
 
-
-        <!-- <div class="bottom-menu">
-          <div class="menu-item">
-            <i class="icon-all-chats"></i>
-            <span>All chats</span>
-          </div>
-          <div class="menu-item">
-            <i class="icon-your-bots"></i>
-            <span>Your bots</span>
-          </div>
-          <div class="menu-item">
-            <i class="icon-creators"></i>
-            <span>Creators</span>
-          </div>
-          <div class="menu-item">
-            <i class="icon-profile"></i>
-            <span>Profile</span>
-          </div>
-          <div class="menu-item">
-            <i class="icon-settings"></i>
-            <span>Settings</span>
-          </div>
-          <div class="menu-item">
-            <i class="icon-feedback"></i>
-            <span>Send feedback</span>
-          </div>
-        </div> -->
       </div>
 
     </div>
@@ -155,7 +132,11 @@ const chatHistory: Ref<MessageItem[]> = ref([])
 const conversationHistories: Ref<MessageItem[]> = ref([])
 const store = useMainStore()
 
-
+// Add pagination state
+const currentPage = ref(1);
+const pageSize = ref(20);
+const isLoading = ref(false);
+const hasMoreData = ref(true);
 
 type Message = {
   role: string
@@ -253,33 +234,61 @@ function formatDate(dateString: string): string {
     return `${month}月${day}日`;
   }
 }
-const fetchConversationData = async () => {
-
-  if (isVisible.value) {
-
+const fetchConversationData = async (page = 1) => {
+  if (isVisible.value && !isLoading.value) {
     const store = useMainStore()
-    const { api_key, client_idx, client_type, inputMessage, model } = storeToRefs(store)
+    const { client_idx, client_type } = storeToRefs(store)
     const clientIdx = client_idx.value
     const clientType = client_type.value
     const apiKey = getQueryParam('api_key') || (localStorage.getItem('SJ_API_KEY') as string)
+    
     try {
-      const res = await fetchConversation(clientIdx, clientType, apiKey);
+      isLoading.value = true;
+      
+      // Add a small delay to prevent rapid consecutive requests
+      if (page > 1) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
+      
+      const res = await fetchConversation(
+        clientIdx, 
+        clientType, 
+        apiKey,
+        {
+          page,
+          page_size: pageSize.value
+        }
+      );
+      
       if (res && res.length > 0) {
-        conversationHistories.value = res;
-        // 更新 chatHistory
-        chatHistory.value = res.map((item: MessageItem) => ({
-          icon: '@/assets/sun_icon.svg',
+        // Update conversationHistories
+        if (page === 1) {
+          conversationHistories.value = res;
+        } else {
+          conversationHistories.value = [...conversationHistories.value, ...res];
+        }
+        
+        // Update hasMoreData based on received items count
+        hasMoreData.value = res.length === pageSize.value;
+        
+        // Update chatHistory
+        const newHistory = res.map((item: MessageItem) => ({
           name: item.model,
-          time: formatDate(item.messages[item.messages.length - 1].timestamp) || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          preview: item.preview || item.messages[item.messages.length - 1].content.substring(0, 30) + '...',
+          time: formatDate(item.messages[item.messages.length - 1]?.timestamp ?? new Date().toISOString()),
+          preview: item.preview || item.messages[item.messages.length - 1]?.content.substring(0, 30) + '...',
           model: item.model,
           conversation_id: item.conversation_id,
           messages: item.messages
         }));
-      } else {
-        // 如果没有对话记录，设置默认对话
+        
+        if (page === 1) {
+          chatHistory.value = newHistory;
+        } else {
+          chatHistory.value = [...chatHistory.value, ...newHistory];
+        }
+      } else if (page === 1) {
+        // If it's the first page and no data, show default message
         chatHistory.value = [{
-          icon: '@/assets/assistant_icon.svg', // 您可以使用适当的图标路径
           name: 'Assistant',
           time: formatDate(new Date().toISOString()),
           preview: '目前还没有对话，赶快来开启一个吧。',
@@ -291,29 +300,63 @@ const fetchConversationData = async () => {
             timestamp: new Date().toISOString()
           }]
         }];
+        hasMoreData.value = false;
+      } else {
+        hasMoreData.value = false;
       }
     } catch (error) {
       console.error('Failed to fetch conversation:', error);
-
+      hasMoreData.value = false;
+    } finally {
+      isLoading.value = false;
     }
   }
-  else {
+};
 
+// Modify scroll handler to be less aggressive
+const handleScroll = async (e: Event) => {
+  const target = e.target as HTMLElement;
+  const scrollPosition = target.scrollTop;
+  const scrollHeight = target.scrollHeight;
+  const clientHeight = target.clientHeight;
+  
+  // When user scrolls to 90% of the container height
+  if (scrollPosition + clientHeight >= scrollHeight * 0.9 && hasMoreData.value && !isLoading.value) {
+    currentPage.value++;
+    await fetchConversationData(currentPage.value);
   }
-
 };
 
 onMounted(() => {
-  // 立即执行一次
-  fetchConversationData();
-
-  // 然后每10秒执行一次
-  conversationInterval = setInterval(fetchConversationData, 10 * 1000);
+  // Initial fetch
+  fetchConversationData(1);
+  
+  // Set up scroll listener with a slight delay to ensure DOM is ready
+  nextTick(() => {
+    const chatHistoryElement = document.querySelector('.chat-history');
+    if (chatHistoryElement) {
+      chatHistoryElement.addEventListener('scroll', handleScroll);
+    }
+  });
+  
+  // Clear existing interval if any
+  if (conversationInterval) {
+    clearInterval(conversationInterval);
+  }
+  
+  // Set new interval for first page only
+  conversationInterval = setInterval(() => fetchConversationData(1), 10 * 1000);
 });
 
 onBeforeUnmount(() => {
   if (conversationInterval) {
     clearInterval(conversationInterval);
+  }
+  
+  // Remove scroll listener
+  const chatHistoryElement = document.querySelector('.chat-history');
+  if (chatHistoryElement) {
+    chatHistoryElement.removeEventListener('scroll', handleScroll);
   }
 });
 
@@ -362,7 +405,7 @@ const toggleSidebar = () => {
 
 const startNewChat = async (modelName: string) => {
   store.setModel(modelName);
-  store.setCurrentChatHistory(null); // 清空当前对话历史
+  store.clearCurrentChatHistory(); // 使用 clearCurrentChatHistory 替代 setCurrentChatHistory
   
   const query = {
     client_idx: String(store.client_idx),
@@ -538,6 +581,15 @@ const displayedModels = computed(() => {
   flex-grow: 1;
   overflow-y: auto;
   padding: 0 1rem;
+  height: calc(100vh - 250px);
+  position: relative; /* Add this for loading spinner positioning */
+}
+
+.chat-history-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0; /* Important for enabling scroll */
 }
 
 .chat-header {
@@ -678,5 +730,18 @@ border-bottom: 1px solid #e0e0e0;
 
 .expand-icon.expanded {
   transform: rotate(180deg);
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
 }
 </style>

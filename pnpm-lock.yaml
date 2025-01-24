@@ -71,6 +71,9 @@ importers:
       markdown-it-katex:
         specifier: ^2.0.3
         version: 2.0.3
+      markdown-it-math:
+        specifier: ^4.1.1
+        version: 4.1.1
       markdown-it-texmath:
         specifier: ^1.0.0
         version: 1.0.0
@@ -890,6 +893,10 @@ packages:
   array-tree-filter@2.1.0:
     resolution: {integrity: sha512-4ROwICNlNw/Hqa9v+rk5h22KjmzB1JGTMVKP2AKJBOCgb0yL0ASf0+YvCcLNNwquOHNX48jkeZIJ3a+oOQqKcw==}
 
+  ascii2mathml@0.6.2:
+    resolution: {integrity: sha512-tkPONh2Y7ZpuGQw6AiRnExX/CSYf5C2T/rF+UMJq5n0Us7+QjL8VY5ZE16xo9wcXhdqPkl/F7lzEzU9HX0YKng==}
+    hasBin: true
+
   asciimath-to-latex@0.5.1:
     resolution: {integrity: sha512-ZSBMq31UioOrFT1+uBOu9QFLqYI6htT4Tty4Vc/Y4mek3vOL9EKJMUvrvH9U4DJDAwN8p21BYUwCBQDYayegYA==}
 
@@ -1695,6 +1702,9 @@ packages:
   markdown-it-katex@2.0.3:
     resolution: {integrity: sha512-nUkkMtRWeg7OpdflamflE/Ho/pWl64Lk9wNBKOmaj33XkQdumhXAIYhI0WO03GeiycPCsxbmX536V5NEXpC3Ng==}
 
+  markdown-it-math@4.1.1:
+    resolution: {integrity: sha512-LQ0hREgMgN4tNcy2PGyw1XypjmKJjc+ZzATMuDIVD/Bagr5SGL198uHleVdiFDrNdXpqVmL4N1KD1GYyftMakQ==}
+
   markdown-it-texmath@1.0.0:
     resolution: {integrity: sha512-4hhkiX8/gus+6e53PLCUmUrsa6ZWGgJW2XCW6O0ASvZUiezIK900ZicinTDtG3kAO2kon7oUA/ReWmpW2FByxg==}
 
@@ -1753,6 +1763,9 @@ packages:
   minimatch@9.0.5:
     resolution: {integrity: sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow==}
     engines: {node: '>=16 || 14 >=14.17'}
+
+  minimist@1.2.8:
+    resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
 
   minipass@3.3.6:
     resolution: {integrity: sha512-DxiNidxSEK+tHG6zOIklvNOwm3hvCrbUrdtzY74U6HKTJxvIDfOUL5W5P2Ghd3DTkhhKPYGqeNUIh5qcM4YBfw==}
@@ -3216,6 +3229,11 @@ snapshots:
 
   array-tree-filter@2.1.0: {}
 
+  ascii2mathml@0.6.2:
+    dependencies:
+      minimist: 1.2.8
+    optional: true
+
   asciimath-to-latex@0.5.1: {}
 
   async-validator@4.2.5: {}
@@ -4037,6 +4055,10 @@ snapshots:
     dependencies:
       katex: 0.6.0
 
+  markdown-it-math@4.1.1:
+    optionalDependencies:
+      ascii2mathml: 0.6.2
+
   markdown-it-texmath@1.0.0: {}
 
   markdown-it@14.1.0:
@@ -4106,6 +4128,9 @@ snapshots:
   minimatch@9.0.5:
     dependencies:
       brace-expansion: 2.0.1
+
+  minimist@1.2.8:
+    optional: true
 
   minipass@3.3.6:
     dependencies:
