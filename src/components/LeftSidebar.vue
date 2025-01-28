@@ -171,9 +171,11 @@ let conversationInterval: any = null;
 
 const commonModels = [
   { name: 'Claude-3.5-Sonnet-June', icon: '../assets/claude-icon.svg' },  
-  { name: 'Claude-3.5-Sonnet', icon: '../assets/claude-icon.svg' },
+  { name: 'DeepSeek-V3-fw', icon: '../assets/deepseekai.png'},
   { name: 'GPT-4o', icon: "../assets/avatars/gpt4o.jepg" },
-  { name: 'gemini-2.0-flash', icon: '../assets/gemini.jepg' },
+    { name: 'Claude-3.5-Sonnet', icon: '../assets/claude-icon.svg' },
+
+  // { name: 'gemini-2.0-flash', icon: '../assets/gemini.jepg' },
 ]
 
 const loadHistory = async (chatItem: MessageItem) => {
