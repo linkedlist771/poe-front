@@ -157,6 +157,8 @@ const chatWithBot = async (modelName: string) => {
 const officialBots = ref([
   // { name: 'Assistant', icon: '🤖', description: 'General-purpose assistant bot. For queries requiring u...' },
   { name: 'Claude-3.5-Sonnet-June', icon: '🌟', description: 'Anthropic\'s most powerful model. Excels in complex...' },
+  { name: 'Claude-3.7-Sonnet', icon: '🌟', description: 'Anthropic\'s most powerful model. Excels in complex...' },
+  { name: 'Claude-3.7-Sonnet-Reasoning', icon: '🌟', description: 'Anthropic\'s most powerful model. Excels in complex...' },
 
   { name: 'Claude-3.5-Sonnet', icon: '🌟', description: 'Anthropic\'s most powerful model. Excels in complex...' },
   { name: 'Claude-3.5-Sonnet-200k', icon: '🌟', description: 'Anthropic\'s most powerful model. Excels in complex...' },
@@ -173,8 +175,8 @@ const officialBots = ref([
 
 
 const models = ref([
-  { name: 'Claude-3.5-Sonnet-June', icon: '../assets/claude-icon.svg' },  
-  { name: 'DeepSeek-V3-fw', icon: '../assets/deepseekai.png'},
+  { name: 'Claude-3.5-Sonnet-June', icon: '../assets/claude-icon.svg' },
+  { name: 'DeepSeek-V3-fw', icon: '../assets/deepseekai.png' },
   { name: 'Claude-3.5-Sonnet', icon: '../assets/claude-icon.svg' },
   { name: 'GPT-4o', icon: "../assets/avatars/gpt4o.jepg" },
   // { name: 'gemini-2.0-flash', icon: '../assets/gemini.jepg' },
