@@ -38,6 +38,32 @@
         "desc": "Anthropic \u6700\u5f3a\u5927\u7684\u6a21\u578b\u3002\u64c5\u957f\u590d\u6742\u4efb\u52a1\u5982\u7f16\u7801\u3001\u5199\u4f5c\u3001\u5206\u6790\u548c\u89c6\u89c9\u5904\u7406\u3002\u4e0a\u4e0b\u6587\u7a97\u53e3\u5df2\u88ab\u7f29\u77ed\u4ee5\u4f18\u5316\u901f\u5ea6\u548c\u6210\u672c\u3002\u5bf9\u4e8e\u9700\u8981\u66f4\u957f\u4e0a\u4e0b\u6587\u7684\u6d88\u606f\uff0c\u8bf7\u5c1d\u8bd5 Claude-3.5-Sonnet-200k\u3002\u79ef\u5206\u53ef\u80fd\u4f1a\u53d1\u751f\u53d8\u5316\u3002",
         "points": 380
     },
+    "claude-3.7-sonnet": {
+        "baseModel": "flannel",
+        "tokens": 4000,
+        "endpoints": [
+            "/v1/chat/completions"
+        ],
+        "premium_model": false,
+        "object": "model",
+        "owned_by": "anthropic",
+        "path": "claude.jpeg",
+        "desc": "Anthropic 最智能的模型。Claude 3.7 Sonnet 是一个混合推理模型,能够产生即时回应或延展性的逐步思考。",
+        "points": 1000
+    },
+    "claude-3.7-sonnet-reasoning": {
+        "baseModel": "flannel_reasoning",
+        "tokens": 4000,
+        "endpoints": [
+            "/v1/chat/completions"
+        ],
+        "premium_model": false,
+        "object": "model",
+        "owned_by": "anthropic",
+        "path": "claude.jpeg",
+        "desc": "Anthropic 最智能的模型。Claude 3.7 Sonnet 是一个推理模型,能够产生即时回应或延展性的逐步思考。",
+        "points": 1000
+    },
     "gpt-4o": {
         "baseModel": "gpt4_o",
         "tokens": 4000,
@@ -314,6 +340,20 @@
         "desc": "Meta \u7684 Llama 3.1 \u7cfb\u5217\u4e2d\u6700\u5c0f\u3001\u6700\u5feb\u7684\u6a21\u578b\u3002\u6b64\u5f00\u6e90\u8bed\u8a00\u6a21\u578b\u5728\u591a\u8bed\u8a00\u5bf9\u8bdd\u65b9\u9762\u8868\u73b0\u51fa\u8272\uff0c\u5728\u5c01\u95ed\u5f0f\u548c\u5f00\u6e90\u5bf9\u8bdd\u5f0f AI \u7cfb\u7edf\u7684\u4f17\u591a\u884c\u4e1a\u57fa\u51c6\u6d4b\u8bd5\u4e2d\u5747\u8868\u73b0\u4f18\u5f02\u3002\u4e0a\u4e0b\u6587\u7a97\u53e3\u5df2\u7f29\u77ed\uff0c\u4ee5\u4f18\u5316\u901f\u5ea6\u548c\u6210\u672c\u3002\u5982\u9700\u66f4\u957f\u7684\u4e0a\u4e0b\u6587\u6d88\u606f\uff0c\u8bf7\u5c1d\u8bd5 Llama-3.1-70B-FW-128k \u6216 Llama-3.1-70B-T-128k\u3002\u8ba1\u7b97\u70b9\u503c\u53ef\u80fd\u4f1a\u53d1\u751f\u53d8\u5316\u3002",
         "text2image": false,
         "points": 300
+    },
+    "r1-llama-70b-search": {
+        "baseModel": "r1llama70bsearch",
+        "tokens": 2000,
+        "endpoints": [
+            "/v1/chat/completions"
+        ],
+        "premium_model": true,
+        "object": "model",
+        "owned_by": "togetherai",
+        "path": "deepseek-r1.png",
+        "desc": "具有联网搜索能力的deepseek-r1",
+        "text2image": false,
+        "points": 15
     },
     "claude-3-opus": {
         "baseModel": "claude_2_1_cedar",

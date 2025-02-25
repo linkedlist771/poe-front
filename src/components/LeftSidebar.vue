@@ -21,7 +21,6 @@
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="9" cy="9" r="7" stroke="#333" stroke-width="2" />
               <line x1="14.7071" y1="14.2929" x2="18.7071" y2="18.2929" stroke="#333" stroke-width="2"
-              
                 stroke-linecap="round" />
             </svg>
             <span><strong> 更多模型</strong></span>
@@ -39,28 +38,16 @@
           <div class="section-header">
             <div class="section-title">常用模型</div>
             <button class="expand-button" @click="toggleModelList">
-              <svg 
-                class="expand-icon" 
-                :class="{ 'expanded': isModelListExpanded }" 
-                xmlns="http://www.w3.org/2000/svg" 
-                width="16" 
-                height="16" 
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M6 9l6 6 6-6"/>
+              <svg class="expand-icon" :class="{ 'expanded': isModelListExpanded }" xmlns="http://www.w3.org/2000/svg"
+                width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9l6 6 6-6" />
               </svg>
             </button>
           </div>
           <div class="model-list">
-            <div v-for="model in displayedModels" 
-                 :key="model.name" 
-                 class="model-item"
-                 @click="startNewChat(model.name)">
+            <div v-for="model in displayedModels" :key="model.name" class="model-item"
+              @click="startNewChat(model.name)">
               <ModelAvatar :modelName="model.name" class="model-avatar"></ModelAvatar>
               <span class="model-name">{{ model.name }}</span>
             </div>
@@ -170,10 +157,13 @@ const closeModal = () => {
 let conversationInterval: any = null;
 
 const commonModels = [
-  { name: 'Claude-3.5-Sonnet-June', icon: '../assets/claude-icon.svg' },  
-  { name: 'DeepSeek-V3-fw', icon: '../assets/deepseekai.png'},
+  { name: 'Claude-3.5-Sonnet-June', icon: '../assets/claude-icon.svg' },
+  { name: 'Claude-3.7-Sonnet', icon: '🌟', description: 'Anthropic\'s most powerful model. Excels in complex...' },
+  { name: 'Claude-3.7-Sonnet-Reasoning', icon: '🌟', description: 'Anthropic\'s most powerful model. Excels in complex...' },
+
+  { name: 'DeepSeek-V3-fw', icon: '../assets/deepseekai.png' },
   { name: 'GPT-4o', icon: "../assets/avatars/gpt4o.jepg" },
-    { name: 'Claude-3.5-Sonnet', icon: '../assets/claude-icon.svg' },
+  { name: 'Claude-3.5-Sonnet', icon: '../assets/claude-icon.svg' },
 
   // { name: 'gemini-2.0-flash', icon: '../assets/gemini.jepg' },
 ]
@@ -243,25 +233,25 @@ const fetchConversationData = async (page = 1) => {
     const clientIdx = client_idx.value
     const clientType = client_type.value
     const apiKey = getQueryParam('api_key') || (localStorage.getItem('SJ_API_KEY') as string)
-    
+
     try {
       isLoading.value = true;
-      
+
       // Add a small delay to prevent rapid consecutive requests
       if (page > 1) {
         await new Promise(resolve => setTimeout(resolve, 300));
       }
-      
+
       const res = await fetchConversation(
-        clientIdx, 
-        clientType, 
+        clientIdx,
+        clientType,
         apiKey,
         {
           page,
           page_size: pageSize.value
         }
       );
-      
+
       if (res && res.length > 0) {
         // Update conversationHistories
         if (page === 1) {
@@ -269,10 +259,10 @@ const fetchConversationData = async (page = 1) => {
         } else {
           conversationHistories.value = [...conversationHistories.value, ...res];
         }
-        
+
         // Update hasMoreData based on received items count
         hasMoreData.value = res.length === pageSize.value;
-        
+
         // Update chatHistory
         const newHistory = res.map((item: MessageItem) => ({
           name: item.model,
@@ -282,7 +272,7 @@ const fetchConversationData = async (page = 1) => {
           conversation_id: item.conversation_id,
           messages: item.messages
         }));
-        
+
         if (page === 1) {
           chatHistory.value = newHistory;
         } else {
@@ -321,7 +311,7 @@ const handleScroll = async (e: Event) => {
   const scrollPosition = target.scrollTop;
   const scrollHeight = target.scrollHeight;
   const clientHeight = target.clientHeight;
-  
+
   // When user scrolls to 90% of the container height
   if (scrollPosition + clientHeight >= scrollHeight * 0.9 && hasMoreData.value && !isLoading.value) {
     currentPage.value++;
@@ -332,7 +322,7 @@ const handleScroll = async (e: Event) => {
 onMounted(() => {
   // Initial fetch
   fetchConversationData(1);
-  
+
   // Set up scroll listener with a slight delay to ensure DOM is ready
   nextTick(() => {
     const chatHistoryElement = document.querySelector('.chat-history');
@@ -340,12 +330,12 @@ onMounted(() => {
       chatHistoryElement.addEventListener('scroll', handleScroll);
     }
   });
-  
+
   // Clear existing interval if any
   if (conversationInterval) {
     clearInterval(conversationInterval);
   }
-  
+
   // Set new interval for first page only
   conversationInterval = setInterval(() => fetchConversationData(1), 10 * 1000);
 });
@@ -354,7 +344,7 @@ onBeforeUnmount(() => {
   if (conversationInterval) {
     clearInterval(conversationInterval);
   }
-  
+
   // Remove scroll listener
   const chatHistoryElement = document.querySelector('.chat-history');
   if (chatHistoryElement) {
@@ -408,7 +398,7 @@ const toggleSidebar = () => {
 const startNewChat = async (modelName: string) => {
   store.setModel(modelName);
   store.clearCurrentChatHistory(); // 使用 clearCurrentChatHistory 替代 setCurrentChatHistory
-  
+
   const query = {
     client_idx: String(store.client_idx),
     client_type: store.client_type,
@@ -505,8 +495,9 @@ const displayedModels = computed(() => {
 
 }
 
-.model-avatar{
-  transform: scale(0.8); /* 缩小到原来的 80% */
+.model-avatar {
+  transform: scale(0.8);
+  /* 缩小到原来的 80% */
 
 
 }
@@ -584,14 +575,16 @@ const displayedModels = computed(() => {
   overflow-y: auto;
   padding: 0 1rem;
   height: calc(100vh - 250px);
-  position: relative; /* Add this for loading spinner positioning */
+  position: relative;
+  /* Add this for loading spinner positioning */
 }
 
 .chat-history-container {
   display: flex;
   flex-direction: column;
   flex: 1;
-  min-height: 0; /* Important for enabling scroll */
+  min-height: 0;
+  /* Important for enabling scroll */
 }
 
 .chat-header {

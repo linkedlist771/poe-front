@@ -1,0 +1,1 @@
+import{A as s,e as u}from"./mermaid-parser.core-fTkt18WJ.js";import"./index-H_I3G-jp.js";import"//at.alicdn.com/t/c/font_4565805_mtkshfnyzag.js";import"./Chat-B09Fnh0d.js";import"./SendMessageButton-BMKEuMRu.js";import"./min-DX41Pdt-.js";import"./reduce-DsGlHKtw.js";import"./clone-DIY9jJ8b.js";export{s as ArchitectureModule,u as createArchitectureServices};
