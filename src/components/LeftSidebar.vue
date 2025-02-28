@@ -38,28 +38,16 @@
           <div class="section-header">
             <div class="section-title">常用模型</div>
             <button class="expand-button" @click="toggleModelList">
-              <svg 
-                class="expand-icon" 
-                :class="{ 'expanded': isModelListExpanded }" 
-                xmlns="http://www.w3.org/2000/svg" 
-                width="16" 
-                height="16" 
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M6 9l6 6 6-6"/>
+              <svg class="expand-icon" :class="{ 'expanded': isModelListExpanded }" xmlns="http://www.w3.org/2000/svg"
+                width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9l6 6 6-6" />
               </svg>
             </button>
           </div>
           <div class="model-list">
-            <div v-for="model in displayedModels" 
-                 :key="model.name" 
-                 class="model-item"
-                 @click="startNewChat(model.name)">
+            <div v-for="model in displayedModels" :key="model.name" class="model-item"
+              @click="startNewChat(model.name)">
               <ModelAvatar :modelName="model.name" class="model-avatar"></ModelAvatar>
               <span class="model-name">{{ model.name }}</span>
             </div>
@@ -189,7 +177,9 @@ const closeModal = () => {
 let conversationInterval: any = null;
 
 const commonModels = [
-  { name: 'Claude-3.5-Sonnet-June', icon: '../assets/claude-icon.svg' },  
+  { name: 'Claude-3.7-Sonnet', icon: '../assets/claude-icon.svg' },
+  { name: 'Claude-3.5-Sonnet-June', icon: '../assets/claude-icon.svg' },
+
   { name: 'Claude-3.5-Sonnet', icon: '../assets/claude-icon.svg' },
   { name: 'GPT-4o', icon: "../assets/avatars/gpt4o.jepg" },
   { name: 'gemini-2.0-flash', icon: '../assets/gemini.jepg' },
@@ -363,7 +353,7 @@ const toggleSidebar = () => {
 const startNewChat = async (modelName: string) => {
   store.setModel(modelName);
   store.setCurrentChatHistory(null); // 清空当前对话历史
-  
+
   const query = {
     client_idx: String(store.client_idx),
     client_type: store.client_type,
@@ -460,8 +450,9 @@ const displayedModels = computed(() => {
 
 }
 
-.model-avatar{
-  transform: scale(0.8); /* 缩小到原来的 80% */
+.model-avatar {
+  transform: scale(0.8);
+  /* 缩小到原来的 80% */
 
 
 }
